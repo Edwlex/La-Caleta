@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="titulo">La Caleta D'Charly | Restaurante & Pollería en Trujillo</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <script>document.documentElement.classList.add("js")</script>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- HEADER -->
+  <header id="top" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
+      <a href="#inicio" class="flex items-center gap-2">
+        <img src="assets/img/logo.webp" alt="La Caleta D'Charly" onerror="this.style.display='none'" class="w-11 h-11 sm:w-14 sm:h-14 object-contain" />
+        <span class="font-display font-black text-amber-300 text-lg sm:text-xl leading-none" id="h-nombre">La Caleta D'Charly</span>
+      </a>
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-stone-200">
+        <a href="#inicio" class="hover:text-amber-400">Inicio</a><a href="#menu-dia" class="hover:text-amber-400">Menú del Día</a><a href="#carta" class="hover:text-amber-400">Carta</a><a href="#nosotros" class="hover:text-amber-400">Nosotros</a><a href="#resenas" class="hover:text-amber-400">Reseñas</a><a href="#ubicacion" class="hover:text-amber-400">Ubicación</a>
+      </nav>
+      <div class="flex items-center gap-2">
+        <button onclick="toggleCarrito()" class="bg-[#10283a] border border-sky-900 text-white px-3.5 py-2.5 rounded-full flex items-center gap-2 text-sm font-bold">🛒 <span class="hidden sm:inline">Tu Pedido</span> <span id="contador-carrito" class="bg-orange-600 text-xs font-extrabold px-2 py-0.5 rounded-full transition">0</span></button>
+        <a id="h-whatsapp" href="#" target="_blank" class="hidden sm:inline-flex bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-bold px-5 py-2.5 rounded-full">WhatsApp</a>
+      </div>
+    </div>
+    <nav class="lg:hidden flex gap-2 overflow-x-auto scrollbar-hide px-4 pb-2 text-xs font-bold text-stone-200">
+      <a href="#menu-dia" class="pill">☀️ Menú del día</a><a href="#carta" class="pill">🍗 Carta</a><a href="#nosotros" class="pill">Nosotros</a><a href="#resenas" class="pill">⭐ Reseñas</a><a href="#ubicacion" class="pill">📍 Ubicación</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section id="inicio" class="hero relative min-h-screen flex items-center overflow-hidden pt-32 pb-28">
+    <div id="embers" class="absolute inset-0 pointer-events-none"></div>
+    <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-6 items-center w-full">
+      <div class="order-2 lg:order-1 text-center lg:text-left space-y-5 reveal">
+        <span class="inline-flex items-center gap-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-bold px-4 py-1.5 rounded-full"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span id="hero-horario">Abierto Hoy</span></span>
+        <h1 class="font-display font-black text-4xl sm:text-6xl leading-[1.05]">Donde el <span class="grad">mar</span> se encuentra con la <span class="grad-fire">brasa</span></h1>
+        <p class="text-base sm:text-lg text-stone-300 max-w-xl mx-auto lg:mx-0">Menú del día y ceviches para el almuerzo. Pollo a la brasa y alitas para la noche. Pide por WhatsApp en un minuto.</p>
+        <div class="flex flex-wrap gap-3 justify-center lg:justify-start pt-1"><a href="#menu-dia" class="btn-fire">☀️ Ver menú de hoy</a><a href="#carta" class="btn-ghost">Explorar la carta</a></div>
+      </div>
+      <div class="order-1 lg:order-2 flex justify-center"><img src="assets/img/logo.webp" alt="La Caleta D'Charly" class="logo-float w-60 sm:w-80 lg:w-[27rem]" /></div>
+    </div>
+    <svg class="wave" viewBox="0 0 2880 120" preserveAspectRatio="none" aria-hidden="true"><path fill="#06121a" d="M0,60 C240,110 480,10 720,60 C960,110 1200,10 1440,60 C1680,110 1920,10 2160,60 C2400,110 2640,10 2880,60 L2880,120 L0,120Z"/></svg>
+  </section>
+
+  <div class="marquee" aria-hidden="true"><div class="marquee-track" id="mq"><span>☀️ Menú del día</span><span>🍗 Pollo a la brasa</span><span>🔥 Alitas</span><span>🐟 Ceviche</span><span>🥡 Tapers para llevar</span><span>🛵 Delivery</span></div></div>
+
+  <!-- MENÚ DEL DÍA (se llena con JS según el día de hoy) -->
+  <section id="menu-dia" class="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6">
+    <div class="menu-ticket reveal">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative z-10">
+        <div>
+          <span class="inline-block bg-amber-400 text-stone-900 text-xs font-extrabold px-3 py-1 rounded-full">☀️ ALMUERZOS DE DÍA</span>
+          <h2 class="font-display font-black text-4xl sm:text-5xl text-white mt-3">Menú del Día</h2>
+          <p class="text-sm sm:text-base text-amber-100/80 mt-1" id="md-hoy">Hoy: cargando...</p>
+        </div>
+        <div class="price-bubble self-start sm:self-auto"><small>Precio hoy</small><b id="md-precio">S/ --</b></div>
+      </div>
+    </div>
+    <div id="md-entradas" class="space-y-3 reveal"></div>
+    <div id="md-segundos" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 reveal"></div>
+    <p id="md-vacio" class="hidden text-stone-400 italic">Hoy no hay menú del día disponible. ¡Mira nuestra carta de pollería y mariscos! 🔥</p>
+  </section>
+
+  <!-- NOSOTROS (✏️ cambia este texto por la historia real del local) -->
+  <section id="nosotros" class="bg-[#08171f] border-y border-sky-950 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 items-center">
+      <div class="space-y-4 reveal">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Quiénes somos</span>
+        <h2 class="font-display font-black text-3xl sm:text-5xl text-white">Sabor de mar, fuego de brasa</h2>
+        <p class="text-stone-300 leading-relaxed">En La Caleta D'Charly cocinamos con sazón criolla: de día, menús del día y ceviches preparados al momento; de noche, pollo a la brasa y alitas bien doradas. Visítanos en La Florida, Víctor Larco, o pide por WhatsApp con delivery o recojo.</p>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 reveal">
+        <div class="feat">🐟<b>Del mar a tu mesa</b><span>Ceviches y mariscos frescos</span></div>
+        <div class="feat">🔥<b>A la brasa</b><span>Pollo y alitas al momento</span></div>
+        <div class="feat">🥡<b>Para llevar</b><span>Delivery, recojo y tapers</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CARTA COMPLETA -->
+  <section id="carta" class="py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 reveal">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-widest text-orange-500">Especialidades</span>
+          <h2 class="font-display font-black text-3xl sm:text-5xl text-white mt-1">Nuestra Carta</h2>
+        </div>
+        <div class="flex gap-2 overflow-x-auto scrollbar-hide md:flex-wrap -mx-4 px-4 md:mx-0 md:px-0" id="filtros">
+          <button data-f="todos" class="tab-active border border-stone-700 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">Todos</button>
+          <button data-f="polleria" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🔥 Pollería</button>
+          <button data-f="alitas" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🍗 Alitas</button>
+          <button data-f="promos" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">👑 Promos</button>
+          <button data-f="mariscos" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🐟 Mariscos</button>
+          <button data-f="bebidas" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🥤 Bebidas</button>
+          <button data-f="extras" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">➕ Extras</button>
+        </div>
+      </div>
+      <div id="grid-carta" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+  </section>
+
+  <!-- RESEÑAS -->
+  <section id="resenas" class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6">
+    <div>
+      <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Opiniones</span>
+      <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-1">Reseñas de nuestros clientes</h2>
+    </div>
+    <div id="lista-resenas" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    <!-- Formulario para dejar reseña -->
+    <form id="form-resena" class="bg-[#0b1c27] border border-stone-800 rounded-2xl p-5 space-y-3 max-w-xl">
+      <h3 class="font-bold text-white">Deja tu opinión</h3>
+      <input id="r-nombre" type="text" placeholder="Tu nombre" required class="w-full bg-[#06121a] border border-stone-700 rounded-xl px-3.5 py-2.5 text-white" />
+      <div id="r-estrellas" class="flex gap-1">
+        <button type="button" class="star-btn" data-v="1">★</button>
+        <button type="button" class="star-btn" data-v="2">★</button>
+        <button type="button" class="star-btn" data-v="3">★</button>
+        <button type="button" class="star-btn" data-v="4">★</button>
+        <button type="button" class="star-btn" data-v="5">★</button>
+      </div>
+      <textarea id="r-texto" placeholder="¿Qué te pareció la comida?" required rows="3" class="w-full bg-[#06121a] border border-stone-700 rounded-xl px-3.5 py-2.5 text-white"></textarea>
+      <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-5 py-2.5 rounded-xl">Publicar reseña</button>
+    </form>
+  </section>
+
+  <!-- UBICACIÓN -->
+  <section id="ubicacion" class="reveal bg-[#08171f] border-t border-stone-800 py-14">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-5 space-y-4">
+        <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Visítanos</span>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white">¿Dónde estamos?</h2>
+        <p class="text-sm text-stone-300"><strong>📍 Dirección:</strong> <span id="u-direccion"></span></p>
+        <p class="text-sm text-stone-300"><strong>🕒 Horario:</strong> <span id="u-horario"></span></p>
+        <p class="text-sm text-stone-300"><strong>📞 Pedidos:</strong> <span id="u-telefono"></span></p>
+        <a id="u-maps" href="#" target="_blank" class="inline-flex items-center gap-2 bg-amber-500 hover:bg-amber-400 text-stone-950 font-extrabold text-sm px-6 py-3 rounded-xl">Abrir ruta en Google Maps</a>
+      </div>
+      <div class="lg:col-span-7 h-72 sm:h-80 rounded-2xl overflow-hidden border border-stone-800">
+        <!-- Pega aquí el <iframe> de Google Maps cuando registres el local -->
+        <iframe id="u-iframe" src="https://www.google.com/maps?q=Calle+Montevideo+La+Florida+Victor+Larco+Herrera+Trujillo&output=embed" width="100%" height="100%" style="border:0" loading="lazy"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#040b10] border-t border-stone-800 text-stone-400 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg font-extrabold text-amber-400" id="f-nombre">La Caleta D'Charly</h3>
+        <p class="text-xs mt-2">Restaurante y Pollería. Sabor marino, comida criolla y pollo a la brasa al momento.</p>
+      </div>
+      <div>
+        <h4 class="font-bold text-white mb-2">Enlaces</h4>
+        <ul class="space-y-1.5 text-xs">
+          <li><a href="#menu-dia" class="hover:text-amber-400">Menú del Día</a></li>
+          <li><a href="#carta" class="hover:text-amber-400">Carta y Pollería</a></li>
+          <li><a href="#resenas" class="hover:text-amber-400">Reseñas</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-bold text-white mb-2">Síguenos</h4>
+        <div class="flex gap-3 text-xs">
+          <a id="f-facebook" href="#" target="_blank" class="bg-stone-800 hover:bg-stone-700 text-white px-3 py-2 rounded-lg">Facebook</a>
+          <a href="#" class="bg-stone-800 hover:bg-stone-700 text-white px-3 py-2 rounded-lg">TikTok</a>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-stone-800/80 py-4 text-center text-xs text-stone-500">© 2026 La Caleta D'Charly.</div>
+  </footer>
+
+  <a id="float-wa" href="#" target="_blank" aria-label="WhatsApp" class="wa-pulse fixed bottom-4 right-4 z-40 w-14 h-14 rounded-full bg-emerald-500 flex items-center justify-center text-2xl shadow-xl">💬</a>
+
+  <!-- CARRITO -->
+  <div id="modal-carrito" class="fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-sm flex justify-end">
+    <div class="bg-[#0b1c27] w-full max-w-md h-full border-l border-stone-800 p-6 flex flex-col justify-between overflow-y-auto">
+      <div>
+        <div class="flex items-center justify-between border-b border-stone-800 pb-4">
+          <h3 class="text-xl font-extrabold text-amber-400">Tu Pedido</h3>
+          <button onclick="toggleCarrito()" class="text-stone-400 hover:text-white text-2xl">&times;</button>
+        </div>
+        <div id="lista-carrito" class="py-4 space-y-3 text-sm"></div>
+        <!-- TAPER (envase para llevar) -->
+        <div class="bg-[#06121a] border border-stone-800 rounded-xl p-3 flex items-center justify-between text-sm">
+          <span>🥡 Tapers para llevar <span class="text-stone-400 text-xs">(<span id="taper-precio-txt"></span> c/u)</span></span>
+          <div class="flex items-center gap-2">
+            <button onclick="cambiarTaper(-1)" class="w-7 h-7 bg-stone-800 rounded-lg font-bold">-</button>
+            <span id="taper-cantidad" class="font-bold w-4 text-center">0</span>
+            <button onclick="cambiarTaper(1)" class="w-7 h-7 bg-orange-600 rounded-lg font-bold">+</button>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-stone-800 pt-4 space-y-3">
+        <div class="flex justify-between items-center text-lg font-extrabold"><span>Total:</span><span id="total-carrito" class="text-amber-400">S/ 0.00</span></div>
+        <input id="cliente-nombre" type="text" placeholder="Tu nombre" class="w-full bg-[#06121a] border border-stone-700 rounded-xl px-3.5 py-2.5 text-white" />
+        <select id="cliente-modalidad" class="w-full bg-[#06121a] border border-stone-700 rounded-xl px-3.5 py-2.5 text-white">
+          <option value="Delivery">🛵 Delivery a domicilio</option>
+          <option value="Recojo en local">🛍️ Recojo en el restaurante</option>
+          <option value="Comer en salón">🍽️ Comer en salón</option>
+        </select>
+        <input id="cliente-direccion" type="text" placeholder="Dirección o referencia (delivery)" class="w-full bg-[#06121a] border border-stone-700 rounded-xl px-3.5 py-2.5 text-white" />
+        <button onclick="enviarPedidoWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-3.5 rounded-xl">💬 Enviar Pedido por WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
