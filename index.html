@@ -74,45 +74,42 @@
       </section>
     </div>
 
-    <!-- ===== MENÚ DEL DÍA ===== -->
-    <div class="view" id="v-menu-dia">
-      <section class="page-pad max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pb-16 space-y-6">
-        <div class="menu-ticket reveal">
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative z-10">
-            <div>
-              <span class="inline-block bg-amber-400 text-stone-900 text-xs font-extrabold px-3 py-1 rounded-full">☀️ ALMUERZOS DE DÍA</span>
-              <h2 class="font-display font-black text-4xl sm:text-5xl text-white mt-3">Menú del Día</h2>
-              <p class="text-sm sm:text-base text-amber-100/80 mt-1" id="md-hoy">Hoy: cargando...</p>
-            </div>
-            <div class="price-bubble self-start sm:self-auto"><small>Precio hoy</small><b id="md-precio">S/ --</b></div>
-          </div>
-        </div>
-        <div id="md-entradas" class="reveal"></div>
-        <div id="md-segundos" class="reveal"></div>
-        <p id="md-vacio" class="hidden text-stone-400 italic">Hoy no hay menú del día disponible. ¡Mira nuestra <a href="#carta" class="text-amber-400 underline">carta</a> de pollería y mariscos! 🔥</p>
-      </section>
-    </div>
-
-    <!-- ===== CARTA ===== -->
+    <!-- ===== NUESTRO MENÚ: Menús · Cena · A la carta · Bebidas ===== -->
     <div class="view" id="v-carta">
       <section class="page-pad pb-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 reveal">
-            <div>
-              <span class="text-xs font-bold uppercase tracking-widest text-orange-500">Especialidades</span>
-              <h2 class="font-display font-black text-3xl sm:text-5xl text-white mt-1">Nuestra Carta</h2>
-            </div>
-            <div class="flex gap-2 overflow-x-auto scrollbar-hide md:flex-wrap -mx-4 px-4 md:mx-0 md:px-0" id="filtros">
-              <button data-f="todos" class="tab-active border border-stone-700 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">Todos</button>
-              <button data-f="polleria" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🔥 Pollería</button>
-              <button data-f="alitas" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🍗 Alitas</button>
-              <button data-f="promos" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">👑 Promos</button>
-              <button data-f="mariscos" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🐟 Mariscos</button>
-              <button data-f="bebidas" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">🥤 Bebidas</button>
-              <button data-f="extras" class="bg-[#10283a] text-stone-300 border border-stone-800 px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap">➕ Extras</button>
-            </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div class="reveal">
+            <span class="text-xs font-bold uppercase tracking-widest text-orange-500">Nuestro menú</span>
+            <h2 class="font-display font-black text-3xl sm:text-5xl text-white mt-1">¿Qué se te antoja hoy?</h2>
           </div>
-          <div id="grid-carta" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+          <div id="tabs" class="tabs">
+            <button data-tab="menus" class="tab-btn">☀️ Menús</button>
+            <button data-tab="cena" class="tab-btn">🌙 Cena</button>
+            <button data-tab="carta" class="tab-btn">🍽️ A la carta</button>
+            <button data-tab="bebidas" class="tab-btn">🥤 Bebidas</button>
+          </div>
+
+          <!-- MENÚS (almuerzo): lo que los dueños marcan cada día en Google Sheets -->
+          <div id="tab-menus" class="tab-panel space-y-6">
+            <div class="menu-ticket">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative z-10">
+                <div>
+                  <span class="inline-block bg-amber-400 text-stone-900 text-xs font-extrabold px-3 py-1 rounded-full">☀️ ALMUERZOS DE DÍA</span>
+                  <h3 class="font-display font-black text-4xl sm:text-5xl text-white mt-3">Menú del Día</h3>
+                  <p class="text-sm sm:text-base text-amber-100/80 mt-1" id="md-hoy">Hoy: cargando...</p>
+                </div>
+                <div class="price-bubble self-start sm:self-auto"><small>Precio hoy</small><b id="md-precio">S/ --</b></div>
+              </div>
+            </div>
+            <div id="md-entradas"></div>
+            <div id="md-segundos"></div>
+            <p id="md-vacio" class="hidden text-stone-400 italic">Hoy no hay menú del día disponible. ¡Mira la <button data-tab="cena" class="text-amber-400 underline">cena</button> o los platos <button data-tab="carta" class="text-amber-400 underline">a la carta</button>! 🔥</p>
+          </div>
+
+          <div id="tab-cena" class="tab-panel"></div>
+          <div id="tab-carta" class="tab-panel"></div>
+          <div id="tab-bebidas" class="tab-panel"></div>
         </div>
       </section>
     </div>

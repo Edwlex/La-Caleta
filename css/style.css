@@ -180,3 +180,25 @@ footer{padding-bottom:4.5rem}
   transform: scale(1.05);
 }
 
+
+/* ===== Tabs del menú (Menús · Cena · A la carta · Bebidas) ===== */
+.tabs{position:sticky;top:6.2rem;z-index:30;display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 0;background:rgba(6,18,26,.92);backdrop-filter:blur(10px);scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+@media(min-width:1024px){.tabs{top:5rem}}
+.tab-btn{flex:none;padding:.65rem 1.1rem;border-radius:9999px;font-weight:800;font-size:.9rem;white-space:nowrap;color:#cbd5e1;background:#10283a;border:1px solid #16384a;transition:transform .2s,background .2s}
+.tab-btn:hover{transform:translateY(-2px)}
+.tab-btn.tab-active{background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;border-color:#ea580c}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:viewIn .35s ease}
+.seccion-menu{margin-top:2.25rem;scroll-margin-top:10rem}
+.seccion-menu:first-child{margin-top:.5rem}
+.sec-head{display:flex;align-items:center;gap:.8rem;margin-bottom:1.25rem;padding-bottom:.9rem;border-bottom:1px solid #16384a}
+.sec-ico{display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;border-radius:1rem;font-size:1.6rem;background:linear-gradient(135deg,rgba(245,158,11,.25),rgba(234,88,12,.2));border:1px solid rgba(245,158,11,.4)}
+.chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0 0}
+.chips button{padding:.4rem .9rem;border-radius:9999px;font-size:.8rem;font-weight:700;color:#fcd34d;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);transition:background .2s}
+.chips button:hover{background:rgba(245,158,11,.22)}
+
+/* Cada subsección (pollo, alitas, ceviches, cervezas...) se muestra sola */
+.seccion-menu{display:none;margin-top:1.25rem}
+.seccion-menu.active{display:block;animation:viewIn .35s ease}
+.chips button.on{background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;border-color:#ea580c}

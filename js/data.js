@@ -19,17 +19,58 @@ const CARTA_LOCAL = {
   promos: [
     { nombre: "PROMO Pollo Entero + Gaseosa 1L", desc: "Pollo entero, papas fritas, ensalada, chaufa y gaseosa de 1 litro", precio: 55.00, img: "assets/img/promo.png", fit: "contain" }
   ],
-  carta: [
-    { nombre: "Ceviche Mixto La Caleta", desc: "Pescado y mariscos con leche de tigre", precio: 25.00, img: "assets/img/ceviche.jpg" },
-    { nombre: "Chicharrón de Pescado",   desc: "Crocante, con yuca y sarsa criolla",    precio: 24.00, img: "assets/img/chicharron.jpg" }
-  ],
-  bebidas: [
-    { nombre: "Gaseosa Personal", precio: 3.00,  img: "assets/img/gaseosa.jpg" },
-    { nombre: "Gaseosa Gordita",  precio: 5.00,  img: "assets/img/gaseosa.jpg" },
-    { nombre: "Gaseosa 1 Litro",  precio: 7.00,  img: "assets/img/gaseosa.jpg" },
-    { nombre: "Gaseosa 2 Litros", precio: 10.00, img: "assets/img/gaseosa.jpg" },
-    { nombre: "Jarra de Chicha Morada (1L)", precio: 10.00, img: "assets/img/chicha.jpg" }
-  ],
+  // ===== A LA CARTA: 6 secciones. Agrega los platos dentro de cada [ ] =====
+  // Modelo: { nombre: "Nombre del plato", desc: "Descripción corta", precio: 0.00, img: "assets/img/archivo.jpg" },
+  carta: {
+    ceviches: [
+      { nombre: "Simple" , precio: 30.00, img: "assets/img/ceviche.jpg" },
+      { nombre: "Mixto" , precio: 35.00, img: "assets/img/ceviche.jpg" },
+      { nombre: "Fuente Simple" , precio: 60.00, img: "assets/img/ceviche.jpg" },
+      { nombre: "Fuente Mixta" , precio: 70.00, img: "assets/img/ceviche.jpg" }
+    
+    ],
+    arroces: [
+      { nombre: "Arroz c/Mariscos", precio: 32.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Chaufa de Mariscos", precio: 32.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Arroz y Langostinos", precio: 35.00, img: "assets/img/archivo.jpg" },
+    ],
+    fritos: [
+      { nombre: "Cabrilla Frita", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Chita Frita", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Zuco", precio: 30.00, img: "assets/img/archivo.jpg" },
+    ],
+    sudados: [
+      { nombre: "Cabrilla", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Chita", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Chilcano", precio: 20.00, img: "assets/img/archivo.jpg" },
+    ],
+    chicharrones: [
+      { nombre: "Simple", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Mixto", precio: 35.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Duo Marino", precio: 45.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Trio Marino", precio: 55.00, img: "assets/img/archivo.jpg" },
+    ],
+    criollos: [
+      { nombre: "Pato", precio: 25.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Cabrito", precio: 25.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Lomo Saltado", precio: 20.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Filete de pollo", precio: 15.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Milanesa", precio: 15.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Churrasco", precio: 18.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Chuleta", precio: 18.00, img: "assets/img/archivo.jpg" },
+    ]
+  },
+  // ===== BEBIDAS: agrega las que falten dentro de cada [ ] =====
+  bebidas: {
+    refrescos: [
+      { nombre: "Gaseosa Personal", precio: 3.00,  img: "assets/img/gaseosa.jpg" },
+      { nombre: "Gaseosa Gordita",  precio: 5.00,  img: "assets/img/gaseosa.jpg" },
+      { nombre: "Gaseosa 1 Litro",  precio: 7.00,  img: "assets/img/gaseosa.jpg" },
+      { nombre: "Gaseosa 2 Litros", precio: 10.00, img: "assets/img/gaseosa.jpg" },
+      { nombre: "Jarra de Chicha Morada (1L)", precio: 10.00, img: "assets/img/chicha.jpg" }
+    ],
+    cervezas: []
+  },
   extras: [
     { nombre: "Papas Fritas", precio: 8.00 },
     { nombre: "Ensalada", precio: 7.00 },

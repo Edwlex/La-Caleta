@@ -22,7 +22,7 @@ function getMenu(){
   try { const g = localStorage.getItem('menuEdit'); return g ? JSON.parse(g) : {}; }
   catch(e){ return {}; }
 }
-const EMO={polleria:'🍗',alitas:'🔥',promos:'👑',mariscos:'🐟',bebidas:'🥤',extras:'🍟'};
+const EMO={polleria:'🍗',alitas:'🔥',promos:'👑',extras:'🍟',bebidas:'🥤',ceviches:'🐟',arroces:'🍚',fritos:'🍤',sudados:'🍲',chicharrones:'🥘',criollos:'🍽️',refrescos:'🥤',cervezas:'🍺'};
 const q=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 function img(o,cat){
   return `<div class="img-wrap" data-e="${EMO[cat]||'🍽️'}">
@@ -34,10 +34,12 @@ function img(o,cat){
 const VIEWS = ['inicio','menu-dia','carta','nosotros','resenas','ubicacion'];
 function showView(name){
   if(!VIEWS.includes(name)) name = 'inicio';
-  document.querySelectorAll('.view').forEach(v=> v.classList.toggle('active', v.id === 'v-'+name));
+  const vid = name==='menu-dia' ? 'carta' : name;
+  if(vid==='carta') setTab(name==='menu-dia' ? 'menus' : curTab);
+  document.querySelectorAll('.view').forEach(v=> v.classList.toggle('active', v.id === 'v-'+vid));
   document.querySelectorAll('[data-nav]').forEach(a=> a.classList.toggle('nav-on', a.dataset.nav === name));
   window.scrollTo({top:0});
-  document.querySelectorAll('#v-'+name+' .reveal').forEach((el,i)=> setTimeout(()=>el.classList.add('in'), 70*i));
+  document.querySelectorAll('#v-'+vid+' .reveal').forEach((el,i)=> setTimeout(()=>el.classList.add('in'), 70*i));
   const act = document.querySelector('.pill.nav-on'); if(act) act.scrollIntoView({inline:'center',block:'nearest'});
 }
 function route(){ showView(location.hash.slice(1)); }
@@ -114,79 +116,54 @@ function renderMenuDelDia(){
   if(vacio && !ent.length && !seg.length) vacio.classList.remove('hidden');
 }
 
-// ===== CARTA =====
+// ===== CARTA: tabs Menús · Cena · A la carta · Bebidas =====
+function card(o,cat,tag){
+  return `<div class="item-carta reveal"><article class="card-x tilt h-full flex flex-col">
+    <div class="relative">${img(o,cat)}<span class="absolute top-3 right-3 bg-amber-400 text-stone-900 font-extrabold text-sm px-3 py-1 rounded-full shadow-lg">${fmt(o.precio)}</span></div>
+    <div class="p-4 sm:p-5 flex-1 flex flex-col gap-1"><span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">${q(tag)}</span>
+      <h4 class="font-display text-xl font-bold text-white">${q(o.nombre)}</h4>
+      <p class="text-sm text-stone-400 flex-1">${q(o.desc||'')}</p></div>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5"><button data-add data-n="${q(o.nombre)}" data-p="${o.precio}" class="bg-orange-600 hover:bg-orange-500 w-full text-white font-bold py-3 rounded-xl active:scale-95 transition">+ Agregar al pedido</button></div>
+  </article></div>`;
+}
+function panel(defs){
+  const chips = defs.length>1 ? `<div class="chips">${defs.map((d,i)=>`<button data-sub="sec-${d.id}" class="${i===0?'on':''}">${d.ico} ${d.t}</button>`).join('')}</div>` : '';
+  return chips + defs.map((d,i)=>`<section id="sec-${d.id}" class="seccion-menu${i===0?' active':''}">
+    <div class="sec-head"><span class="sec-ico">${d.ico}</span><div><h3 class="font-display font-black text-2xl sm:text-3xl text-white leading-none">${d.t}</h3>${d.sub?`<p class="text-sm text-stone-400 mt-1">${q(d.sub)}</p>`:''}</div></div>
+    ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o=>card(o,d.id,d.t)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí 🍽️</p>'}
+  </section>`).join('');
+}
 function renderCarta(){
-  const m = getMenu();
-  
-  // ===== 🌙 BLOQUE: PARA LA NOCHE =====
-  let htmlNoche = '';
-  (m.polleria||[]).forEach(p=> htmlNoche += card(p,'polleria','Pollería','text-amber-400','bg-orange-600'));
-  ((m.alitas||{}).items||[]).forEach(a=> htmlNoche += card({...a, desc:(m.alitas.desc||'')+' • Sabores: '+(m.alitas.sabores||[]).join(', ')},'alitas','Alitas','text-amber-400','bg-orange-600'));
-  (m.promos||[]).forEach(p=> htmlNoche += card(p,'promos','Promo','text-amber-400','bg-amber-500'));
-  
-  // ===== ☀️ BLOQUE: A LA CARTA =====
-  let htmlCarta = '';
-  (m.mariscos||[]).forEach(c=> htmlCarta += card(c,'mariscos','Mariscos','text-cyan-400','bg-cyan-700'));
-  (m.criollos||[]).forEach(c=> htmlCarta += card(c,'criollos','Criollo','text-orange-400','bg-orange-800'));
-  (m.bebidas||[]).forEach(b=> htmlCarta += card(b,'bebidas','Bebidas','text-emerald-400','bg-emerald-700'));
-  (m.extras||[]).forEach(e=> htmlCarta += card({...e, img:e.img||'assets/img/extras.jpg', desc:e.desc||'Extra'},'extras','Extra','text-stone-400','bg-stone-700'));
-
-  // Renderizar con encabezados de sección
-  html('grid-carta', `
-    <div class="seccion-menu" data-seccion="noche">
-      <div class="seccion-header">
-        <span class="seccion-ico">🌙</span>
-        <div>
-          <h3 class="seccion-titulo">Para la Noche</h3>
-          <p class="seccion-sub">Pollo a la brasa, alitas y promos • 6:00 PM - 10:00 PM</p>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${htmlNoche}</div>
-    </div>
-    <div class="seccion-menu" data-seccion="carta">
-      <div class="seccion-header">
-        <span class="seccion-ico">☀️</span>
-        <div>
-          <h3 class="seccion-titulo">A la Carta</h3>
-          <p class="seccion-sub">Mariscos frescos, platos criollos y más • Todo el día</p>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${htmlCarta}</div>
-    </div>
-  `);
+  const m = getMenu(), al = m.alitas||{}, C = m.carta||{};
+  html('tab-cena', panel([
+    {id:'polleria', ico:'🍗', t:'Pollo a la brasa', items:m.polleria||[]},
+    {id:'alitas',   ico:'🔥', t:'Alitas', sub:'Sabores: '+(al.sabores||[]).join(' • '), items:(al.items||[]).map(a=>({...a,desc:al.desc||''}))},
+    {id:'promos',   ico:'👑', t:'Promos', items:m.promos||[]},
+    {id:'extras',   ico:'🍟', t:'Extras', items:(m.extras||[]).map(e=>({...e,img:e.img||''}))}
+  ]));
+  html('tab-carta', panel([['ceviches','🐟','Ceviches'],['arroces','🍚','Arroces'],['fritos','🍤','Fritos'],['sudados','🍲','Sudados'],['chicharrones','🥘','Chicharrones'],['criollos','🍽️','Criollos']]
+    .map(([id,ico,t])=>({id,ico,t,items:C[id]||[]}))));
+  const B = Array.isArray(m.bebidas) ? {refrescos:m.bebidas} : (m.bebidas||{});
+  html('tab-bebidas', panel([{id:'refrescos', ico:'🥤', t:'Refrescos', items:B.refrescos||[]}, {id:'cervezas', ico:'🍺', t:'Cervezas', items:B.cervezas||[]}]));
 }
 
-// ===== FILTROS =====
-function initFiltros(){
-  const cont = $('filtros'); if(!cont) return;
-  const categoriasNoche = ['polleria','alitas','promos'];
-  const categoriasCarta = ['mariscos','criollos','bebidas','extras'];
-  
-  cont.addEventListener('click', e=>{
-    const btn = e.target.closest('button'); if(!btn) return;
-    const f = btn.dataset.f;
-    
-    // Estilos del botón activo
-    document.querySelectorAll('#filtros button').forEach(b=>{
-      b.classList.remove('tab-active');
-      b.classList.add('bg-[#10283a]','text-stone-300','border-stone-800');
-    });
-    btn.classList.add('tab-active');
-    btn.classList.remove('bg-[#10283a]','text-stone-300','border-stone-800');
-    
-    // Mostrar/ocultar tarjetas por categoría
-    document.querySelectorAll('.item-carta').forEach(c=>{
-      c.classList.toggle('hidden', !(f==='todos' || c.dataset.cat===f));
-    });
-    
-    // Mostrar/ocultar bloques enteros
-    const bloqueNoche = document.querySelector('[data-seccion="noche"]');
-    const bloqueCarta = document.querySelector('[data-seccion="carta"]');
-    
-    if(bloqueNoche) bloqueNoche.style.display = (f==='todos' || categoriasNoche.includes(f)) ? '' : 'none';
-    if(bloqueCarta) bloqueCarta.style.display = (f==='todos' || categoriasCarta.includes(f)) ? '' : 'none';
+// ===== TABS =====
+let curTab = 'menus';
+function setTab(t){
+  if(!$('tab-'+t)) t = 'menus';
+  curTab = t;
+  document.querySelectorAll('.tab-panel').forEach(p=> p.classList.toggle('active', p.id==='tab-'+t));
+  document.querySelectorAll('#tabs .tab-btn').forEach(b=> b.classList.toggle('tab-active', b.dataset.tab===t));
+}
+function initTabs(){
+  document.addEventListener('click', e=>{
+    const t = e.target.closest('[data-tab]'); if(t){ setTab(t.dataset.tab); return; }
+    const g = e.target.closest('[data-sub]'); if(g){ const pn=g.closest('.tab-panel');
+      pn.querySelectorAll('.chips button').forEach(b=> b.classList.toggle('on', b===g));
+      pn.querySelectorAll('.seccion-menu').forEach(x=> x.classList.toggle('active', x.id===g.dataset.sub)); }
   });
 }
+
 
 // ===== CARRITO =====
 let carrito = [], tapers = 0, modalidad = 'Delivery';
@@ -324,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   try { cargarConfig(); } catch(e){ console.warn('Config:', e); }
   try { renderMenuDelDia(); } catch(e){ console.warn('Menú día:', e); }
   try { renderCarta(); } catch(e){ console.warn('Carta:', e); }
-  try { initFiltros(); } catch(e){ console.warn('Filtros:', e); }
+  try { initTabs(); } catch(e){ console.warn('Tabs:', e); }
   try { renderResenas(); } catch(e){ console.warn('Reseñas:', e); }
   try { initResenas(); } catch(e){ console.warn('Form reseñas:', e); }
   try { cargarCarrito(); initCarrito(); } catch(e){ console.warn('Carrito:', e); }
