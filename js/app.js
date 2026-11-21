@@ -62,8 +62,10 @@ function cargarConfig(){
   setText('taper-precio-txt', fmt(CONFIG.taperPrecio));
 }
 
-// ===== MENÚ DEL DÍA =====
-// ===== MENÚ DEL DÍA =====
+
+// ===== MENÚ DEL DÍA (LÓGICA: SEGUNDO OBLIGATORIO, ENTRADA OPCIONAL) =====
+let seleccionMenu = { entradaIdx: -1, segundoIdx: -1 };
+
 function renderMenuDelDia(){
   const m = getMenu();
   const dia = hoy();
@@ -71,55 +73,210 @@ function renderMenuDelDia(){
   const titulo = dia.charAt(0).toUpperCase() + dia.slice(1);
   const jugo = d && d.jugo ? `🥤 ${d.jugo}` : "🥤 Refresco";
 
-  setText('md-hoy', `Hoy: ${titulo} • Entrada + Segundo + ${jugo}`);
-  setText('q-precio', (d && d.activo) ? `Hoy ${fmt(d.precio)} • Entrada + Segundo + ${jugo}` : 'Hoy no hay menú del día');
+  setText('md-hoy', `Hoy: ${titulo} • Entrada (Opcional) + Segundo + ${jugo}`);
   const contE = $('md-entradas'), contS = $('md-segundos'), vacio = $('md-vacio');
   if(contE) contE.innerHTML=''; if(contS) contS.innerHTML='';
 
-  if(!d || !d.activo){ setText('md-precio','Cerrado'); if(vacio) vacio.classList.remove('hidden'); return; }
+  if(!d || !d.activo){
+    setText('md-precio','Cerrado');
+    setText('q-precio','Hoy no hay menú del día');
+    if(vacio) vacio.classList.remove('hidden');
+    return;
+  }
   if(vacio) vacio.classList.add('hidden');
-  setText('md-precio', fmt(d.precio));
 
   const ent = (d.entradas||[]).filter(x=>x.disponible);
   const seg = (d.segundos||[]).filter(x=>x.disponible);
 
+  // 🧮 CÁLCULO DEL PRECIO "DESDE" (va AQUÍ, después de definir 'seg')
+  const precios = seg.map(s => parseFloat(s.precio || 0)).filter(p => p > 0);
+  const minP = precios.length ? Math.min(...precios) : parseFloat(d.precio || 0);
+  setText('md-precio', minP > 0 ? fmt(minP) : 'S/ --');
+  setText('q-precio', minP > 0 ? `Hoy desde ${fmt(minP)}` : 'Ver menú de hoy');
+
+  seleccionMenu = { entradaIdx: -1, segundoIdx: -1 };
+
   // ===== ENTRADAS =====
   if(contE && ent.length){
-    contE.innerHTML = `<h3 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">1. Elige tu Entrada</h3>
+    contE.innerHTML = `<h3 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3">1. Elige tu Entrada (Opcional)</h3>
       <div class="menu-grid-entradas">` +
-      ent.map(e=>`<div class="entrada-card bg-[#06121a] border border-stone-800 rounded-xl overflow-hidden flex items-center gap-3 p-3 hover:border-amber-500/50 transition-all duration-200 hover:-translate-y-1" data-plato="1" data-n="${q(e.nombre)}" data-desc="${q(e.desc||'')}" data-img="${q(e.img||'')}" data-tipo="entrada" data-nc="${q(e.nombre)}" data-pc="0" role="button" tabindex="0">
-        ${e.img ? `<div class="w-16 h-16 rounded-lg overflow-hidden border border-stone-700 shrink-0"><img src="${q(e.img)}" alt="${q(e.nombre)}" class="w-full h-full object-cover" onerror="this.parentElement.innerHTML='<span class=\\'flex items-center justify-center w-full h-full text-2xl\\'>🍽️</span>'" /></div>` : `<div class="w-16 h-16 rounded-lg bg-stone-800 flex items-center justify-center text-2xl shrink-0">🍽️</div>`}
-        <div class="flex-1 min-w-0">
-          <h4 class="font-display text-sm font-bold text-white leading-tight truncate">${q(e.nombre)}</h4>
-        </div>
-        <div class="flex flex-col items-end gap-1.5 shrink-0">
-          <span class="text-[10px] text-emerald-400 font-bold bg-emerald-400/10 px-1.5 py-0.5 rounded">Incluida</span>
-          <button data-add data-n="${q(e.nombre)}" data-p="0" class="bg-orange-600 hover:bg-orange-500 text-white text-[10px] font-bold px-2 py-1 rounded transition">+ Agregar</button>
-        </div>
-      </div>`).join('') + `</div>`;
+      ent.map((e, i) => {
+        const pE = parseFloat(e.precio || 0);
+        return `<div class="menu-select-card entrada-card bg-[#06121a] border border-stone-800 rounded-xl overflow-hidden flex items-center gap-3 p-3" 
+                     onclick="seleccionarEntrada(${i})" data-idx="${i}">
+          <div class="check-badge">✓</div>
+          ${e.img ? `<div class="w-16 h-16 rounded-lg overflow-hidden border border-stone-700 shrink-0"><img src="${q(e.img)}" alt="${q(e.nombre)}" class="w-full h-full object-cover" /></div>` : `<div class="w-16 h-16 rounded-lg bg-stone-800 flex items-center justify-center text-2xl shrink-0">🍽️</div>`}
+          <div class="flex-1 min-w-0">
+            <h4 class="font-display text-sm font-bold text-white leading-tight truncate">${q(e.nombre)}</h4>
+            <span class="text-[10px] ${pE>0?'text-amber-400':'text-emerald-400'} font-bold">${pE>0?fmt(pE):'Incluida en el combo'}</span>
+          </div>
+        </div>`;
+      }).join('') + `</div>`;
   }
 
   // ===== SEGUNDOS =====
   if(contS && seg.length){
-    contS.innerHTML = `<h3 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3 mt-6">2. Elige tu Segundo</h3>
+    contS.innerHTML = `<h3 class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-3 mt-6">2. Elige tu Segundo (Obligatorio)</h3>
       <div class="menu-grid-segundos">` +
-      seg.map(s=>`<div class="card-x segundo-card flex flex-col overflow-hidden" data-plato="1" data-n="${q(s.nombre)}" data-desc="${q(s.desc||'')}" data-img="${q(s.img||'')}" data-tipo="segundo" data-nc="${q('Menú: '+s.nombre)}" data-pc="${d.precio}" role="button" tabindex="0">
-        <div class="segundo-img-wrap">
-          ${s.img ? `<img src="${q(s.img)}" alt="${q(s.nombre)}" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.parentElement.innerHTML='<div class=\\'flex items-center justify-center w-full h-full text-6xl\\'>🍗</div>'" />` : `<div class="flex items-center justify-center w-full h-full text-6xl">🍗</div>`}
-        </div>
-        <div class="p-5 flex flex-col justify-between gap-4 flex-1">
-          <div>
-            <h4 class="text-lg sm:text-xl font-bold font-display text-white leading-tight">${q(s.nombre)}</h4>
+      seg.map((s, i) => {
+        const pS = parseFloat(s.precio || 0);
+        return `<div class="menu-select-card segundo-card card-x flex flex-col overflow-hidden" 
+                     onclick="seleccionarSegundo(${i})" data-idx="${i}">
+          <div class="check-badge">✓</div>
+          <div class="segundo-img-wrap">
+            ${s.img ? `<img src="${q(s.img)}" alt="${q(s.nombre)}" loading="lazy" class="w-full h-full object-cover" />` : `<div class="flex items-center justify-center w-full h-full text-6xl">🍗</div>`}
           </div>
-          <div class="flex items-center justify-between pt-3 border-t border-stone-800">
-            <span class="font-extrabold text-lg text-amber-400">${fmt(d.precio)}</span>
-            <button data-add data-n="${q('Menú: '+s.nombre)}" data-p="${d.precio}" class="bg-orange-600 hover:bg-orange-500 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition">+ Agregar</button>
+          <div class="p-4 flex flex-col justify-between gap-2 flex-1">
+            <h4 class="text-base font-bold font-display text-white leading-tight">${q(s.nombre)}</h4>
+            <span class="font-extrabold text-lg text-amber-400">${fmt(pS)}</span>
           </div>
-        </div>
-      </div>`).join('') + `</div>`;
+        </div>`;
+      }).join('') + `</div>`;
   }
+
+  // ===== PANEL DE RESUMEN =====
+  const contResumen = $('md-resumen');
+  if(contResumen) {
+    contResumen.innerHTML = `
+      <div class="mt-8 bg-[#0b1c27] border border-stone-700 rounded-2xl p-5 sticky bottom-4 shadow-2xl shadow-black/50 z-20">
+        <h4 class="text-sm font-bold text-stone-400 uppercase tracking-wider mb-3">Tu Pedido</h4>
+        <div class="space-y-2 mb-4 text-sm">
+          <div class="flex justify-between items-center">
+            <span class="text-stone-300">Entrada:</span>
+            <span class="font-bold text-white" id="res-entrada">Opcional</span>
+          </div>
+          <div class="flex justify-between items-center">
+            <span class="text-stone-300">Segundo:</span>
+            <span class="font-bold text-white" id="res-segundo">Sin seleccionar</span>
+          </div>
+          <div class="border-t border-stone-700 pt-2 mt-2 flex justify-between items-center">
+            <span class="font-bold text-white">Total:</span>
+            <span class="font-black text-2xl text-amber-400" id="res-total">S/ 0.00</span>
+          </div>
+        </div>
+        <button id="btn-agregar-menu" onclick="agregarMenuCompleto()" disabled 
+          class="w-full bg-stone-700 text-stone-400 font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-not-allowed">
+          <span>Selecciona un segundo</span>
+        </button>
+      </div>
+    `;
+  }
+  
   if(vacio && !ent.length && !seg.length) vacio.classList.remove('hidden');
+  actualizarResumenMenu();
 }
+
+
+
+
+// ===== FUNCIONES DE CONTROL DE SELECCIÓN =====
+function seleccionarEntrada(idx) {
+  seleccionMenu.entradaIdx = (seleccionMenu.entradaIdx === idx) ? -1 : idx;
+  actualizarUISeleccion();
+}
+
+function seleccionarSegundo(idx) {
+  seleccionMenu.segundoIdx = (seleccionMenu.segundoIdx === idx) ? -1 : idx;
+  actualizarUISeleccion();
+}
+
+function actualizarUISeleccion() {
+  document.querySelectorAll('.entrada-card').forEach((card, i) => {
+    card.classList.toggle('selected', i === seleccionMenu.entradaIdx);
+  });
+  document.querySelectorAll('.segundo-card').forEach((card, i) => {
+    card.classList.toggle('selected', i === seleccionMenu.segundoIdx);
+  });
+  actualizarResumenMenu();
+}
+
+function actualizarResumenMenu() {
+  const m = getMenu();
+  const dia = hoy();
+  const d = m.menuDelDia?.semana?.[dia];
+  if(!d) return;
+
+  const ent = (d.entradas||[]).filter(x=>x.disponible);
+  const seg = (d.segundos||[]).filter(x=>x.disponible);
+
+  const elEntrada = $('res-entrada');
+  const elSegundo = $('res-segundo');
+  const elTotal = $('res-total');
+  const btn = $('btn-agregar-menu');
+
+  if(!elEntrada || !elSegundo || !elTotal || !btn) return;
+
+  let precioTotal = 0;
+  let nombreEntrada = "Opcional";
+  let nombreSegundo = "Sin seleccionar";
+
+  if (seleccionMenu.entradaIdx !== -1 && ent[seleccionMenu.entradaIdx]) {
+    nombreEntrada = ent[seleccionMenu.entradaIdx].nombre;
+    precioTotal += parseFloat(ent[seleccionMenu.entradaIdx].precio || 0);
+  }
+
+  if (seleccionMenu.segundoIdx !== -1 && seg[seleccionMenu.segundoIdx]) {
+    nombreSegundo = seg[seleccionMenu.segundoIdx].nombre;
+    precioTotal += parseFloat(seg[seleccionMenu.segundoIdx].precio || 0);
+  }
+
+  elEntrada.textContent = nombreEntrada;
+  elSegundo.textContent = nombreSegundo;
+  elTotal.textContent = fmt(precioTotal);
+
+  // El botón se habilita SOLO si hay un segundo seleccionado
+  if (seleccionMenu.segundoIdx !== -1) {
+    btn.disabled = false;
+    btn.className = "w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-900/30 active:scale-95";
+    const tieneEntrada = seleccionMenu.entradaIdx !== -1;
+    btn.innerHTML = `<span>Agregar ${tieneEntrada ? 'Menú Completo' : 'Segundo'}</span>`;
+  } else {
+    btn.disabled = true;
+    btn.className = "w-full bg-stone-700 text-stone-400 font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-not-allowed";
+    btn.innerHTML = `<span>Selecciona un segundo</span>`;
+  }
+}
+
+function agregarMenuCompleto() {
+  const m = getMenu();
+  const dia = hoy();
+  const d = m.menuDelDia?.semana?.[dia];
+  if(!d) return;
+
+  const ent = (d.entradas||[]).filter(x=>x.disponible);
+  const seg = (d.segundos||[]).filter(x=>x.disponible);
+
+  if (seleccionMenu.segundoIdx === -1) return;
+
+  const segundoElegido = seg[seleccionMenu.segundoIdx];
+  const precioSegundo = parseFloat(segundoElegido.precio || 0);
+  let precioTotal = precioSegundo;
+  let nombreCombo = `Menú: ${segundoElegido.nombre}`;
+
+  if (seleccionMenu.entradaIdx !== -1 && ent[seleccionMenu.entradaIdx]) {
+    const entradaElegida = ent[seleccionMenu.entradaIdx];
+    precioTotal += parseFloat(entradaElegida.precio || 0);
+    nombreCombo = `Menú: ${entradaElegida.nombre} + ${segundoElegido.nombre}`;
+  }
+
+  agregarAlCarrito(nombreCombo, precioTotal);
+
+  // Resetear selección
+  seleccionMenu = { entradaIdx: -1, segundoIdx: -1 };
+  actualizarUISeleccion();
+
+  // Feedback visual
+  const btn = $('btn-agregar-menu');
+  const textoOriginal = btn.innerHTML;
+  btn.innerHTML = `<span>Agregado al pedido</span>`;
+  btn.classList.add('bg-emerald-600');
+  setTimeout(() => {
+    btn.innerHTML = textoOriginal;
+    btn.classList.remove('bg-emerald-600');
+  }, 1500);
+}
+
+
 
 // ===== CARTA: tabs Cena · A la carta · Bebidas =====
 function card(o,cat,tag){

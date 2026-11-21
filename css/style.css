@@ -6,9 +6,11 @@ body{font-family:'Outfit',sans-serif;background:#06121a;color:#f4f1ea;-webkit-ta
 .scrollbar-hide::-webkit-scrollbar{display:none}.scrollbar-hide{-ms-overflow-style:none;scrollbar-width:none}
 input,select,textarea{font-size:16px!important}
 .item-carta.hidden{display:none}
+
 /* header */
 #top.solid{background:rgba(6,18,26,.9);backdrop-filter:blur(12px);border-bottom:1px solid #16384a}
 .pill{white-space:nowrap;padding:.4rem .9rem;border-radius:9999px;background:rgba(16,40,58,.85);border:1px solid #16384a}
+
 /* hero */
 .hero{background:radial-gradient(60% 50% at 15% 20%,rgba(20,120,150,.45),transparent 60%),radial-gradient(55% 50% at 85% 75%,rgba(234,88,12,.35),transparent 60%),#06121a}
 .logo-float{animation:float 6s ease-in-out infinite;filter:drop-shadow(0 0 40px rgba(245,158,11,.35))}
@@ -27,6 +29,7 @@ input,select,textarea{font-size:16px!important}
 .marquee-track{display:flex;width:max-content;padding:.7rem 0;animation:mq 28s linear infinite}
 .marquee-track span{margin-right:2.5rem;white-space:nowrap}
 @keyframes mq{to{transform:translateX(-50%)}}
+
 /* menú del día */
 .menu-ticket{position:relative;overflow:hidden;border-radius:1.75rem;padding:1.75rem;background:linear-gradient(135deg,rgba(245,158,11,.2),rgba(14,116,144,.28));border:1px solid rgba(245,158,11,.5)}
 .price-bubble{width:7.5rem;height:7.5rem;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#2a1204;background:radial-gradient(circle at 30% 25%,#fde68a,#f59e0b 55%,#c2410c);box-shadow:0 0 0 6px rgba(245,158,11,.2);animation:pulse 2.4s ease-in-out infinite}
@@ -34,6 +37,7 @@ input,select,textarea{font-size:16px!important}
 @keyframes pulse{50%{transform:scale(1.07);box-shadow:0 0 0 14px rgba(245,158,11,.08)}}
 .feat{display:flex;flex-direction:column;gap:.25rem;font-size:2rem;padding:1.25rem;border-radius:1.25rem;background:#0b1c27;border:1px solid #16384a;transition:transform .3s,border-color .3s}
 .feat b{font-size:1rem;color:#fff}.feat span{font-size:.8rem;color:#94a3b8}.feat:hover{transform:translateY(-6px);border-color:#f59e0b}
+
 /* tarjetas */
 .card-x{position:relative;overflow:hidden;border-radius:1.25rem;background:linear-gradient(160deg,#0f2a3a,#0a1a24);border:1px solid #17394b;transition:transform .18s ease-out,box-shadow .35s,border-color .35s}
 .card-x:hover{border-color:#f59e0b;box-shadow:0 18px 40px -12px rgba(245,158,11,.4)}
@@ -45,30 +49,29 @@ input,select,textarea{font-size:16px!important}
 .card-x:hover .img-wrap img{transform:scale(1.12) rotate(1.2deg)}
 .img-missing{display:flex;align-items:center;justify-content:center}
 .img-missing::after{content:attr(data-e);font-size:3.5rem;animation:float 3s ease-in-out infinite}
-/* aparecer al hacer scroll (si el JS falla, se muestra solo a los 2.5s) */
+
+/* aparecer al hacer scroll */
 @keyframes show{to{opacity:1;transform:none}}
 .js .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease;animation:show .01s 2.5s forwards}
 .js .reveal.in{opacity:1;transform:none}
 .wa-pulse{animation:wa 2.2s infinite}@keyframes wa{0%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}100%{box-shadow:0 0 0 18px rgba(16,185,129,0)}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.js .reveal{opacity:1;transform:none}}
 
-
-
-/* ===== Vistas (una sección a la vez) ===== */
+/* Vistas */
 .view{display:none}
 .view.active{display:block;animation:viewIn .45s ease}
 @keyframes viewIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .page-pad{padding-top:8.5rem}
 @media(min-width:1024px){.page-pad{padding-top:8rem}}
 
-/* ===== Navegación activa ===== */
+/* Navegación activa */
 .navlink{position:relative;padding:.25rem 0;transition:color .2s}
 .navlink:hover{color:#fbbf24}
 .navlink::after{content:"";position:absolute;left:0;bottom:-4px;height:2px;width:100%;background:linear-gradient(90deg,#f59e0b,#ea580c);transform:scaleX(0);transform-origin:left;transition:transform .3s}
 .navlink.nav-on{color:#fbbf24}.navlink.nav-on::after{transform:scaleX(1)}
 .pill.nav-on{background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;border-color:#ea580c}
 
-/* ===== Accesos rápidos del inicio ===== */
+/* Accesos rápidos del inicio */
 .quick{position:relative;display:flex;flex-direction:column;gap:.2rem;padding:1.5rem;border-radius:1.25rem;background:linear-gradient(160deg,#0f2a3a,#0a1a24);border:1px solid #17394b;transition:transform .25s,border-color .25s,box-shadow .25s}
 .quick:hover{transform:translateY(-6px);border-color:#f59e0b;box-shadow:0 18px 40px -14px rgba(245,158,11,.45)}
 .quick .q-ico{font-size:2.2rem}
@@ -77,19 +80,19 @@ input,select,textarea{font-size:16px!important}
 .quick i{position:absolute;top:1.25rem;right:1.25rem;font-style:normal;color:#f59e0b;font-weight:800;transition:transform .25s}
 .quick:hover i{transform:translateX(5px)}
 
-/* ===== WhatsApp flotante ===== */
+/* WhatsApp flotante */
 .wa-float{position:fixed;right:1rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:45;display:flex;align-items:center;justify-content:center;gap:.6rem;height:3.5rem;min-width:3.5rem;padding:0 .9rem;border-radius:9999px;background:linear-gradient(135deg,#25d366,#128c7e);color:#fff;font-weight:800;font-size:.9rem;box-shadow:0 10px 28px -6px rgba(18,140,126,.7);transition:transform .2s}
 .wa-float:hover{transform:translateY(-3px) scale(1.04)}
 .wa-float svg{width:1.8rem;height:1.8rem;flex:none}
 .wa-float span{display:none;white-space:nowrap}
 @media(min-width:1024px){.wa-float span{display:inline}.wa-float{padding:0 1.2rem}}
 
-/* ===== Barra flotante del pedido ===== */
+/* Barra flotante del pedido */
 .cart-bar{position:fixed;left:1rem;right:5.5rem;max-width:24rem;bottom:calc(1rem + env(safe-area-inset-bottom,0px));z-index:44;display:flex;align-items:center;gap:.75rem;height:3.5rem;padding:0 1rem;border-radius:9999px;color:#fff;background:linear-gradient(135deg,#f59e0b,#ea580c);box-shadow:0 12px 30px -8px rgba(234,88,12,.75);transform:translateY(150%);opacity:0;pointer-events:none;transition:transform .35s cubic-bezier(.2,.8,.2,1),opacity .25s}
 .cart-bar.show{transform:none;opacity:1;pointer-events:auto}
 .cb-count{display:inline-flex;align-items:center;justify-content:center;min-width:1.7rem;height:1.7rem;padding:0 .4rem;border-radius:9999px;background:#fff;color:#c2410c;font-weight:900;font-size:.85rem}
 
-/* ===== Panel del carrito ===== */
+/* Panel del carrito */
 .drawer{position:fixed;inset:0;z-index:60;visibility:hidden;transition:visibility .35s}
 .drawer.open{visibility:visible}
 .drawer-bg{position:absolute;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);opacity:0;transition:opacity .3s}
@@ -113,9 +116,7 @@ input,select,textarea{font-size:16px!important}
 .field.err{border-color:#ef4444}
 footer{padding-bottom:4.5rem}
 
-/* ===== MENÚ DEL DÍA: GRID 4 COLUMNAS PROFESIONAL ===== */
-
-/* Base: 1 columna en móvil */
+/* MENÚ DEL DÍA: GRID 4 COLUMNAS */
 .menu-grid-entradas,
 .menu-grid-segundos {
   display: grid;
@@ -127,7 +128,6 @@ footer{padding-bottom:4.5rem}
   gap: 1.25rem;
 }
 
-/* Tablet: 2 columnas */
 @media (min-width: 640px) {
   .menu-grid-entradas,
   .menu-grid-segundos {
@@ -135,7 +135,6 @@ footer{padding-bottom:4.5rem}
   }
 }
 
-/* Desktop: 4 columnas (4 por fila, y baja a otra fila con 4 más) */
 @media (min-width: 1024px) {
   .menu-grid-entradas,
   .menu-grid-segundos {
@@ -143,7 +142,6 @@ footer{padding-bottom:4.5rem}
   }
 }
 
-/* Entradas: tarjetas compactas */
 .entrada-card {
   width: 100%;
   transition: all 0.2s ease;
@@ -154,13 +152,11 @@ footer{padding-bottom:4.5rem}
   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
 }
 
-/* Segundos: tarjetas con altura uniforme */
 .segundo-card {
   width: 100%;
   height: 100%;
 }
 
-/* Imagen de segundos: proporción 4:3 estricta, nunca se distorsiona */
 .segundo-img-wrap {
   aspect-ratio: 4 / 3;
   width: 100%;
@@ -180,8 +176,7 @@ footer{padding-bottom:4.5rem}
   transform: scale(1.05);
 }
 
-
-/* ===== Tabs del menú (Menús · Cena · A la carta · Bebidas) ===== */
+/* Tabs del menú */
 .tabs{position:sticky;top:6.2rem;z-index:30;display:flex;gap:.5rem;overflow-x:auto;padding:.6rem 0;background:rgba(6,18,26,.92);backdrop-filter:blur(10px);scrollbar-width:none}
 .tabs::-webkit-scrollbar{display:none}
 @media(min-width:1024px){.tabs{top:5rem}}
@@ -197,19 +192,11 @@ footer{padding-bottom:4.5rem}
 .chips{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0 0}
 .chips button{padding:.4rem .9rem;border-radius:9999px;font-size:.8rem;font-weight:700;color:#fcd34d;background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);transition:background .2s}
 .chips button:hover{background:rgba(245,158,11,.22)}
-
-/* Cada subsección (pollo, alitas, ceviches, cervezas...) se muestra sola */
 .seccion-menu{display:none;margin-top:1.25rem}
 .seccion-menu.active{display:block;animation:viewIn .35s ease}
 .chips button.on{background:linear-gradient(135deg,#f59e0b,#ea580c);color:#fff;border-color:#ea580c}
 
-
-
-
-
-
-
-/* ===== MODAL DETALLE DE PLATO ===== */
+/* MODAL DETALLE DE PLATO */
 .plato-modal{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:1rem;visibility:hidden;opacity:0;transition:opacity .3s ease,visibility .3s}
 .plato-modal.open{visibility:visible;opacity:1}
 .plato-modal-bg{position:absolute;inset:0;background:rgba(3,10,15,.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
@@ -229,17 +216,42 @@ footer{padding-bottom:4.5rem}
 .plato-modal-footer button{white-space:nowrap}
 @media (max-width:480px){.plato-modal-footer{flex-direction:column;align-items:stretch}.plato-modal-footer button{width:100%}}
 
-/* ===== TARJETAS DE ENTRADA/SEGUNDO CON ANIMACIONES ===== */
-.entrada-card[data-plato],.segundo-card[data-plato]{cursor:pointer;position:relative}
-.entrada-card[data-plato]:hover,.segundo-card[data-plato]:hover{border-color:#f59e0b !important;box-shadow:0 10px 30px rgba(245,158,11,.15)}
-
-/* Animación Ken Burns en las imágenes de las tarjetas */
-.entrada-card img,.segundo-card img{transition:transform .6s cubic-bezier(.2,.9,.3,1)}
-.entrada-card:hover img,.segundo-card:hover img{transform:scale(1.12)}
-.segundo-img-wrap{overflow:hidden}
-.segundo-img-wrap img{transition:transform .8s cubic-bezier(.2,.9,.3,1)}
-.segundo-card:hover .segundo-img-wrap img{transform:scale(1.15)}
-
-/* Efecto shimmer al cargar imagen */
-.entrada-card img,.segundo-card img{animation:imgFadeIn .6s ease-out}
-@keyframes imgFadeIn{from{opacity:0;filter:blur(8px)}to{opacity:1;filter:blur(0)}}
+/* SELECCIÓN DE MENÚ DEL DÍA */
+.menu-select-card {
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: 2px solid transparent;
+  position: relative;
+}
+.menu-select-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(245, 158, 11, 0.5);
+}
+.menu-select-card.selected {
+  border-color: #f59e0b !important;
+  background: rgba(245, 158, 11, 0.08) !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+.menu-select-card .check-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: #f59e0b;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+  opacity: 0;
+  transform: scale(0.5);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 10;
+}
+.menu-select-card.selected .check-badge {
+  opacity: 1;
+  transform: scale(1);
+}
