@@ -2,18 +2,18 @@
 const CARTA_LOCAL = {
   polleria: [
     { nombre: "1/4 de Pollo a la Brasa", desc: "Con papas fritas y ensalada", precio: 15.00, img: "assets/img/pollo-cuarto.jpg" },
-    { nombre: "1/2 Pollo a la Brasa",    desc: "Con papas fritas y ensalada", precio: 25.00, img: "assets/img/pollo-medio.jpg" },
+    { nombre: "1/2 Pollo a la Brasa",    desc: "Con papas fritas y ensalada", precio: 25.00, img: "assets/img/medio pollo.webp" },
     { nombre: "Octavo de Pollo",         desc: "Porción individual",          precio: 9.99,  img: "assets/img/pollo-octavo.jpg" },
-    { nombre: "Pollo Entero",            desc: "Con papas fritas y ensalada", precio: 45.00, img: "assets/img/pollo-entero.jpg" }
+    { nombre: "Pollo Entero",            desc: "Con papas fritas y ensalada", precio: 45.00, img: "assets/img/pollo entero.webp" }
   ],
   alitas: {
     desc: "Con papas fritas y cremas",
     sabores: ["BBQ", "Maracuyá", "Acevichada", "Broster"],
     items: [
-      { nombre: "6 Alitas",  precio: 16.00, img: "assets/img/alitas.jpg" },
-      { nombre: "10 Alitas", precio: 28.00, img: "assets/img/alitas.jpg" },
-      { nombre: "15 Alitas", precio: 40.00, img: "assets/img/alitas.jpg" },
-      { nombre: "20 Alitas", precio: 55.00, img: "assets/img/alitas.jpg" }
+      { nombre: "6 Alitas",  precio: 16.00, img: "assets/img/6 alitas.webp" },
+      { nombre: "10 Alitas", precio: 28.00, img: "assets/img/10 alitas.webp" },
+      { nombre: "15 Alitas", precio: 40.00, img: "assets/img/15 alitas.webp" },
+      { nombre: "20 Alitas", precio: 55.00, img: "assets/img/20 alitas.webp" }
     ]
   },
   promos: [
@@ -26,7 +26,8 @@ const CARTA_LOCAL = {
       { nombre: "Simple" , precio: 30.00, img: "assets/img/ceviche.jpg" },
       { nombre: "Mixto" , precio: 35.00, img: "assets/img/ceviche.jpg" },
       { nombre: "Fuente Simple" , precio: 60.00, img: "assets/img/ceviche.jpg" },
-      { nombre: "Fuente Mixta" , precio: 70.00, img: "assets/img/ceviche.jpg" }
+      { nombre: "Fuente Mixta" , precio: 70.00, img: "assets/img/ceviche.jpg" },
+      { nombre: "Leche de Tigre" , precio: 15.00, img: "assets/img/ceviche.jpg" }
     
     ],
     arroces: [
@@ -43,12 +44,15 @@ const CARTA_LOCAL = {
       { nombre: "Cabrilla", precio: 30.00, img: "assets/img/archivo.jpg" },
       { nombre: "Chita", precio: 30.00, img: "assets/img/archivo.jpg" },
       { nombre: "Chilcano", precio: 20.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Picante de Mariscos", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Pahuela", precio: 40.00, img: "assets/img/archivo.jpg" },
     ],
     chicharrones: [
       { nombre: "Simple", precio: 30.00, img: "assets/img/archivo.jpg" },
       { nombre: "Mixto", precio: 35.00, img: "assets/img/archivo.jpg" },
       { nombre: "Duo Marino", precio: 45.00, img: "assets/img/archivo.jpg" },
       { nombre: "Trio Marino", precio: 55.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Jalea", precio: 60.00, img: "assets/img/archivo.jpg" },
     ],
     criollos: [
       { nombre: "Pato", precio: 25.00, img: "assets/img/archivo.jpg" },
@@ -62,14 +66,23 @@ const CARTA_LOCAL = {
   },
   // ===== BEBIDAS: agrega las que falten dentro de cada [ ] =====
   bebidas: {
-    refrescos: [
-      { nombre: "Gaseosa Personal", precio: 3.00,  img: "assets/img/gaseosa.jpg" },
-      { nombre: "Gaseosa Gordita",  precio: 5.00,  img: "assets/img/gaseosa.jpg" },
-      { nombre: "Gaseosa 1 Litro",  precio: 7.00,  img: "assets/img/gaseosa.jpg" },
-      { nombre: "Gaseosa 2 Litros", precio: 10.00, img: "assets/img/gaseosa.jpg" },
-      { nombre: "Jarra de Chicha Morada (1L)", precio: 10.00, img: "assets/img/chicha.jpg" }
+    bebidas: [
+      { nombre: "Agua", precio: 3.00,  img: "assets/img/gaseosa.jpg" },
+      { nombre: "Inca cola de 1/2",  precio: 4.00,  img: "assets/img/gaseosa.jpg" },
+      { nombre: "Coca cola de 1/2",  precio: 4.00,  img: "assets/img/gaseosa.jpg" },
+      { nombre: "Coca cola de 1L", precio: 8.00, img: "assets/img/gaseosa.jpg" },
+      { nombre: "Inka cola de 1L", precio: 8.00, img: "assets/img/chicha.jpg" },
+      { nombre: "Coca cola de 2L", precio: 10.00, img: "assets/img/chicha.jpg" },
+      { nombre: "Inka cola de 2L", precio: 10.00, img: "assets/img/chicha.jpg" },
     ],
-    cervezas: []
+    cervezas: [
+      { nombre: "Trujillo", precio: 10.00, img: "assets/img/chicha.jpg" },
+      { nombre: "Callao", precio: 10.00, img: "assets/img/chicha.jpg" },
+      { nombre: "Negra", precio: 12.00, img: "assets/img/chicha.jpg" }
+    ],
+    refrescos:[
+      { nombre: "Limonada Frozen 1L", precio: 15, img: "assets/img/limonada"}
+    ]
   },
   extras: [
     { nombre: "Papas Fritas", precio: 8.00 },
