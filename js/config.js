@@ -3,7 +3,7 @@ const CONFIG = {
   nombre: "La Caleta D'Charly",
   eslogan: "Restaurante • Pollería",
   telefono: "948000764",
-  whatsapp: "51948000764", // código de país + número, SIN el +
+  whatsapp: "51905900946", // código de país + número, SIN el +
   direccion: "Calle Montevideo Mz. A Lt. 3, La Florida, Buenos Aires Sur, Víctor Larco Herrera, Trujillo",
   horario: "Lun - Dom: 12:00 PM a 10:00 PM",
   // URL real de su página de Facebook (ponla entre comillas cuando la tengas)

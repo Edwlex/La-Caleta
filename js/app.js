@@ -34,11 +34,10 @@ const VIEWS = ['inicio', 'menu-dia', 'carta', 'nosotros', 'ubicacion']; // 'rese
 function showView(name){
   if(!VIEWS.includes(name)) name = 'inicio';
   
-  // Ya no hay trucos: si es menu-dia, muestra v-menu-dia. Si es carta, muestra v-carta.
   document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'v-' + name));
   document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('nav-on', a.dataset.nav === name));
   if(name !== 'menu-dia') mostrarMenuBar(false);
-
+  if(name === 'carta') setTab('cena');
   
   window.scrollTo({top: 0});
   document.querySelectorAll('#v-' + name + ' .reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), 70 * i));
@@ -450,10 +449,11 @@ function cambiarTaper(d){
 
 function vaciarCarrito(){
   if(!carrito.length && !tapers) return;
-  if(confirm('¿Vaciar todo tu pedido?')){
-    carrito=[]; tapers=0;
-    actualizarVistaCarrito();
-  }
+  carrito = [];
+  tapers = 0;
+  actualizarVistaCarrito();
+  toggleCarrito(true); // cierra el panel
+  mostrarToast('🗑️ Pedido vaciado');
 }
 
 function subtotal(){ return carrito.reduce((a,i)=>a+i.precio*i.cantidad,0); }
@@ -579,13 +579,7 @@ function toggleCarrito(forceClose){
   document.body.style.overflow = open ? 'hidden' : '';
   if(open){
     setModalidad(modalidad);
-    ['cliente-nombre','cliente-telefono','cliente-direccion','cliente-personas'].forEach(id=>{
-      const el = $(id);
-      if(el){
-        el.oninput = validarCampos;
-        el.onchange = validarCampos;
-      }
-    });
+    validarCampos();
   }
 }
 
@@ -596,8 +590,19 @@ function initCarrito(){
     if(b) setModalidad(b.dataset.mod);
   });
   document.addEventListener('keydown', e=>{ if(e.key==='Escape') toggleCarrito(true); });
+
+  // Listeners de validación en tiempo real (una sola vez, siempre activos)
+  ['cliente-nombre','cliente-telefono','cliente-direccion','cliente-personas'].forEach(id=>{
+    const el = $(id);
+    if(el){
+      el.addEventListener('input', validarCampos);
+      el.addEventListener('change', validarCampos);
+    }
+  });
+
   setModalidad('Delivery');
   actualizarVistaCarrito();
+  validarCampos();
 }
 
 function enviarPedidoWhatsApp(){
@@ -640,23 +645,57 @@ function enviarPedidoWhatsApp(){
     t += `*Modalidad:* Comer en salón\n*Personas:* ${personas}\n`;
   }
 
+  // 1. Abrir WhatsApp
   window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`, '_blank');
-}
 
-
-function toggleCarrito(forceClose){
-  const m = $('modal-carrito'); if(!m) return;
-  const open = forceClose===true ? false : !m.classList.contains('open');
-  m.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
-  if(open){ setModalidad(modalidad); } // re-aplica estado al abrir
-}
-
-function initCarrito(){
-  const mods = $('mods'); if(mods) mods.addEventListener('click', e=>{ const b=e.target.closest('.mod'); if(b) setModalidad(b.dataset.mod); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape') toggleCarrito(true); });
-  setModalidad('Delivery');
+  // 2. Vaciar carrito y tapers
+  carrito = [];
+  tapers = 0;
+  guardarCarrito();
   actualizarVistaCarrito();
+
+  // 3. Cerrar el panel del carrito
+  toggleCarrito(true);
+
+  // 4. Mostrar feedback visual
+  mostrarToast('✅ ¡Pedido enviado con éxito!');
+}
+
+// ===== FEEDBACK VISUAL (TOAST) =====
+function mostrarToast(mensaje){
+  const toast = document.createElement('div');
+  toast.textContent = mensaje;
+  toast.style.cssText = `
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: #10b981;
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 9999px;
+    font-weight: 800;
+    font-size: 1rem;
+    box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.5);
+    z-index: 9999;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+  `;
+  document.body.appendChild(toast);
+  
+  // Forzar reflow para que la animación funcione
+  requestAnimationFrame(() => {
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+  });
+
+  // Desaparecer a los 3 segundos
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateX(-50%) translateY(-20px)';
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
 }
 
 
