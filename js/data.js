@@ -38,15 +38,15 @@ const CARTA_LOCAL = {
     ],
     fritos: [
       { nombre: "Cabrilla Frita", precio: 30.00, img: "assets/img/cabrilla-frita.webp" },
-      { nombre: "Chita Frita", precio: 30.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Zuco", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Chita Frita", precio: 30.00, img: "assets/img/chita-frita.webp" },
+      { nombre: "Zuco", precio: 30.00, img: "assets/img/zuco.webp" },
     ],
     sudados: [
-      { nombre: "Cabrilla", precio: 30.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Chita", precio: 30.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Chilcano", precio: 20.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Picante de Mariscos", precio: 30.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Pahuela", precio: 40.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Cabrilla", precio: 30.00, img: "assets/img/sudado-cabrilla.webp" },
+      { nombre: "Chita", precio: 30.00, img: "assets/img/sudado-chita.webp" },
+      { nombre: "Chilcano", precio: 20.00, img: "assets/img/chilcano.webp" },
+      { nombre: "Picante de Mariscos", precio: 30.00, img: "assets/img/picante-mariscos.webp" },
+      { nombre: "Pahuela", precio: 40.00, img: "assets/img/pahuela.webp" },
     ],
     chicharrones: [
       { nombre: "Simple", precio: 30.00, img: "assets/img/archivo.jpg" },
