@@ -37,6 +37,8 @@ function showView(name){
   // Ya no hay trucos: si es menu-dia, muestra v-menu-dia. Si es carta, muestra v-carta.
   document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v.id === 'v-' + name));
   document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('nav-on', a.dataset.nav === name));
+  if(name !== 'menu-dia') mostrarMenuBar(false);
+
   
   window.scrollTo({top: 0});
   document.querySelectorAll('#v-' + name + ' .reveal').forEach((el, i) => setTimeout(() => el.classList.add('in'), 70 * i));
@@ -81,6 +83,7 @@ function renderMenuDelDia(){
     setText('md-precio','Cerrado');
     setText('q-precio','Hoy no hay menú del día');
     if(vacio) vacio.classList.remove('hidden');
+    mostrarMenuBar(false);
     return;
   }
   if(vacio) vacio.classList.add('hidden');
@@ -88,7 +91,7 @@ function renderMenuDelDia(){
   const ent = (d.entradas||[]).filter(x=>x.disponible);
   const seg = (d.segundos||[]).filter(x=>x.disponible);
 
-  // 🧮 CÁLCULO DEL PRECIO "DESDE" (va AQUÍ, después de definir 'seg')
+  // Precio "DESDE" (mínimo de los segundos)
   const precios = seg.map(s => parseFloat(s.precio || 0)).filter(p => p > 0);
   const minP = precios.length ? Math.min(...precios) : parseFloat(d.precio || 0);
   setText('md-precio', minP > 0 ? fmt(minP) : 'S/ --');
@@ -102,8 +105,7 @@ function renderMenuDelDia(){
       <div class="menu-grid-entradas">` +
       ent.map((e, i) => {
         const pE = parseFloat(e.precio || 0);
-        return `<div class="menu-select-card entrada-card bg-[#06121a] border border-stone-800 rounded-xl overflow-hidden flex items-center gap-3 p-3" 
-                     onclick="seleccionarEntrada(${i})" data-idx="${i}">
+        return `<div class="menu-select-card entrada-card bg-[#06121a] border border-stone-800 rounded-xl overflow-hidden flex items-center gap-3 p-3" onclick="seleccionarEntrada(${i})" data-idx="${i}">
           <div class="check-badge">✓</div>
           ${e.img ? `<div class="w-16 h-16 rounded-lg overflow-hidden border border-stone-700 shrink-0"><img src="${q(e.img)}" alt="${q(e.nombre)}" class="w-full h-full object-cover" /></div>` : `<div class="w-16 h-16 rounded-lg bg-stone-800 flex items-center justify-center text-2xl shrink-0">🍽️</div>`}
           <div class="flex-1 min-w-0">
@@ -120,8 +122,7 @@ function renderMenuDelDia(){
       <div class="menu-grid-segundos">` +
       seg.map((s, i) => {
         const pS = parseFloat(s.precio || 0);
-        return `<div class="menu-select-card segundo-card card-x flex flex-col overflow-hidden" 
-                     onclick="seleccionarSegundo(${i})" data-idx="${i}">
+        return `<div class="menu-select-card segundo-card card-x flex flex-col overflow-hidden" onclick="seleccionarSegundo(${i})" data-idx="${i}">
           <div class="check-badge">✓</div>
           <div class="segundo-img-wrap">
             ${s.img ? `<img src="${q(s.img)}" alt="${q(s.nombre)}" loading="lazy" class="w-full h-full object-cover" />` : `<div class="flex items-center justify-center w-full h-full text-6xl">🍗</div>`}
@@ -134,34 +135,6 @@ function renderMenuDelDia(){
       }).join('') + `</div>`;
   }
 
-  // ===== PANEL DE RESUMEN =====
-  const contResumen = $('md-resumen');
-  if(contResumen) {
-    contResumen.innerHTML = `
-      <div class="mt-8 bg-[#0b1c27] border border-stone-700 rounded-2xl p-5 sticky bottom-4 shadow-2xl shadow-black/50 z-20">
-        <h4 class="text-sm font-bold text-stone-400 uppercase tracking-wider mb-3">Tu Pedido</h4>
-        <div class="space-y-2 mb-4 text-sm">
-          <div class="flex justify-between items-center">
-            <span class="text-stone-300">Entrada:</span>
-            <span class="font-bold text-white" id="res-entrada">Opcional</span>
-          </div>
-          <div class="flex justify-between items-center">
-            <span class="text-stone-300">Segundo:</span>
-            <span class="font-bold text-white" id="res-segundo">Sin seleccionar</span>
-          </div>
-          <div class="border-t border-stone-700 pt-2 mt-2 flex justify-between items-center">
-            <span class="font-bold text-white">Total:</span>
-            <span class="font-black text-2xl text-amber-400" id="res-total">S/ 0.00</span>
-          </div>
-        </div>
-        <button id="btn-agregar-menu" onclick="agregarMenuCompleto()" disabled 
-          class="w-full bg-stone-700 text-stone-400 font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-not-allowed">
-          <span>Selecciona un segundo</span>
-        </button>
-      </div>
-    `;
-  }
-  
   if(vacio && !ent.length && !seg.length) vacio.classList.remove('hidden');
   actualizarResumenMenu();
 }
@@ -174,109 +147,94 @@ function seleccionarEntrada(idx) {
   seleccionMenu.entradaIdx = (seleccionMenu.entradaIdx === idx) ? -1 : idx;
   actualizarUISeleccion();
 }
-
 function seleccionarSegundo(idx) {
   seleccionMenu.segundoIdx = (seleccionMenu.segundoIdx === idx) ? -1 : idx;
   actualizarUISeleccion();
 }
-
 function actualizarUISeleccion() {
-  document.querySelectorAll('.entrada-card').forEach((card, i) => {
-    card.classList.toggle('selected', i === seleccionMenu.entradaIdx);
-  });
-  document.querySelectorAll('.segundo-card').forEach((card, i) => {
-    card.classList.toggle('selected', i === seleccionMenu.segundoIdx);
-  });
+  document.querySelectorAll('.entrada-card').forEach((card, i) => card.classList.toggle('selected', i === seleccionMenu.entradaIdx));
+  document.querySelectorAll('.segundo-card').forEach((card, i) => card.classList.toggle('selected', i === seleccionMenu.segundoIdx));
   actualizarResumenMenu();
 }
 
-function actualizarResumenMenu() {
-  const m = getMenu();
-  const dia = hoy();
-  const d = m.menuDelDia?.semana?.[dia];
-  if(!d) return;
-
-  const ent = (d.entradas||[]).filter(x=>x.disponible);
-  const seg = (d.segundos||[]).filter(x=>x.disponible);
-
-  const elEntrada = $('res-entrada');
-  const elSegundo = $('res-segundo');
-  const elTotal = $('res-total');
-  const btn = $('btn-agregar-menu');
-
-  if(!elEntrada || !elSegundo || !elTotal || !btn) return;
-
-  let precioTotal = 0;
-  let nombreEntrada = "Opcional";
-  let nombreSegundo = "Sin seleccionar";
-
-  if (seleccionMenu.entradaIdx !== -1 && ent[seleccionMenu.entradaIdx]) {
-    nombreEntrada = ent[seleccionMenu.entradaIdx].nombre;
-    precioTotal += parseFloat(ent[seleccionMenu.entradaIdx].precio || 0);
-  }
-
-  if (seleccionMenu.segundoIdx !== -1 && seg[seleccionMenu.segundoIdx]) {
-    nombreSegundo = seg[seleccionMenu.segundoIdx].nombre;
-    precioTotal += parseFloat(seg[seleccionMenu.segundoIdx].precio || 0);
-  }
-
-  elEntrada.textContent = nombreEntrada;
-  elSegundo.textContent = nombreSegundo;
-  elTotal.textContent = fmt(precioTotal);
-
-  // El botón se habilita SOLO si hay un segundo seleccionado
-  if (seleccionMenu.segundoIdx !== -1) {
-    btn.disabled = false;
-    btn.className = "w-full bg-orange-600 hover:bg-orange-500 text-white font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-orange-900/30 active:scale-95";
-    const tieneEntrada = seleccionMenu.entradaIdx !== -1;
-    btn.innerHTML = `<span>Agregar ${tieneEntrada ? 'Menú Completo' : 'Segundo'}</span>`;
-  } else {
-    btn.disabled = true;
-    btn.className = "w-full bg-stone-700 text-stone-400 font-bold py-3.5 rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-not-allowed";
-    btn.innerHTML = `<span>Selecciona un segundo</span>`;
+// Muestra/oculta la barra en vivo y evita que choque con la barra del carrito
+function mostrarMenuBar(mostrar){
+  const mb = $('menu-bar'), cb = $('cart-bar');
+  if(mb){ mb.classList.toggle('show', mostrar); mb.setAttribute('aria-hidden', mostrar ? 'false' : 'true'); }
+  if(cb){
+    if(mostrar){
+      cb.classList.remove('show');
+    } else {
+      // Re-sincroniza y muestra la barra del carrito con el total real
+      actualizarVistaCarrito();
+    }
   }
 }
 
-function agregarMenuCompleto() {
+function actualizarResumenMenu(){
   const m = getMenu();
   const dia = hoy();
   const d = m.menuDelDia?.semana?.[dia];
-  if(!d) return;
+  if(!d){ mostrarMenuBar(false); return; }
 
   const ent = (d.entradas||[]).filter(x=>x.disponible);
   const seg = (d.segundos||[]).filter(x=>x.disponible);
 
-  if (seleccionMenu.segundoIdx === -1) return;
+  const tieneEntrada = seleccionMenu.entradaIdx !== -1 && ent[seleccionMenu.entradaIdx];
+  const tieneSegundo = seleccionMenu.segundoIdx !== -1 && seg[seleccionMenu.segundoIdx];
+
+  // Solo aparece cuando eligieron al menos el segundo
+  if(!tieneSegundo){ mostrarMenuBar(false); return; }
+
+  let precioTotal = parseFloat(seg[seleccionMenu.segundoIdx].precio || 0);
+  let nombre = seg[seleccionMenu.segundoIdx].nombre;
+  let detalle = 'Solo segundo';
+  let count = 1;
+
+  if(tieneEntrada){
+    precioTotal += parseFloat(ent[seleccionMenu.entradaIdx].precio || 0);
+    nombre = `${ent[seleccionMenu.entradaIdx].nombre} + ${nombre}`;
+    detalle = 'Entrada + Segundo';
+    count = 2;
+  }
+
+  setText('mb-count', count);
+  setText('mb-nombre', nombre);
+  setText('mb-detalle', detalle);
+  setText('mb-total', fmt(precioTotal));
+  mostrarMenuBar(true);
+}
+
+function agregarMenuCompleto(){
+  const m = getMenu();
+  const dia = hoy();
+  const d = m.menuDelDia?.semana?.[dia];
+  if(!d || seleccionMenu.segundoIdx === -1) return;
+
+  const ent = (d.entradas||[]).filter(x=>x.disponible);
+  const seg = (d.segundos||[]).filter(x=>x.disponible);
 
   const segundoElegido = seg[seleccionMenu.segundoIdx];
-  const precioSegundo = parseFloat(segundoElegido.precio || 0);
-  let precioTotal = precioSegundo;
+  let precioTotal = parseFloat(segundoElegido.precio || 0);
   let nombreCombo = `Menú: ${segundoElegido.nombre}`;
 
-  if (seleccionMenu.entradaIdx !== -1 && ent[seleccionMenu.entradaIdx]) {
+  if(seleccionMenu.entradaIdx !== -1 && ent[seleccionMenu.entradaIdx]){
     const entradaElegida = ent[seleccionMenu.entradaIdx];
     precioTotal += parseFloat(entradaElegida.precio || 0);
     nombreCombo = `Menú: ${entradaElegida.nombre} + ${segundoElegido.nombre}`;
   }
 
+  // Agregar al carrito (esto ya actualiza la barra del carrito)
   agregarAlCarrito(nombreCombo, precioTotal);
 
-  // Resetear selección
+  // Resetear la selección
   seleccionMenu = { entradaIdx: -1, segundoIdx: -1 };
-  actualizarUISeleccion();
+  document.querySelectorAll('.entrada-card,.segundo-card').forEach(c => c.classList.remove('selected'));
 
-  // Feedback visual
-  const btn = $('btn-agregar-menu');
-  const textoOriginal = btn.innerHTML;
-  btn.innerHTML = `<span>Agregado al pedido</span>`;
-  btn.classList.add('bg-emerald-600');
-  setTimeout(() => {
-    btn.innerHTML = textoOriginal;
-    btn.classList.remove('bg-emerald-600');
-  }, 1500);
+  // Ocultar la barra en vivo y mostrar la del carrito con el total real
+  mostrarMenuBar(false);
+  actualizarVistaCarrito();
 }
-
-
 
 // ===== CARTA: tabs Cena · A la carta · Bebidas =====
 function card(o,cat,tag){
@@ -413,73 +371,309 @@ function initModalPlato(){
 
 
 // ===== CARRITO =====
+// ===== CARRITO =====
 let carrito = [], tapers = 0, modalidad = 'Delivery';
-function guardarCarrito(){ try{ localStorage.setItem('cart', JSON.stringify({carrito,tapers})); }catch(e){} }
-function cargarCarrito(){
-  try{ const g = JSON.parse(localStorage.getItem('cart')||'null'); if(g){ carrito = g.carrito||[]; tapers = g.tapers||0; } }catch(e){}
-}
-function agregarAlCarrito(nombre, precio){
-  const ex = carrito.find(i => i.nombre === nombre);
-  if(ex) ex.cantidad++; else carrito.push({nombre, precio, cantidad: 1});
-  actualizarVistaCarrito();
-  const b = $('contador-carrito'); if(b){ b.classList.add('scale-125'); setTimeout(()=>b.classList.remove('scale-125'),200); }
-}
-function cambiarCantidad(i,d){ carrito[i].cantidad += d; if(carrito[i].cantidad <= 0) carrito.splice(i,1); actualizarVistaCarrito(); }
-function cambiarTaper(d){ tapers = Math.max(0, tapers+d); actualizarVistaCarrito(); }
-function vaciarCarrito(){ if(!carrito.length && !tapers) return; if(confirm('¿Vaciar todo tu pedido?')){ carrito=[]; tapers=0; actualizarVistaCarrito(); } }
-function subtotal(){ return carrito.reduce((a,i) => a + i.precio*i.cantidad, 0); }
-function total(){ return subtotal() + tapers * CONFIG.taperPrecio; }
 
-function actualizarVistaCarrito(){
-  const n = carrito.reduce((a,i) => a + i.cantidad, 0);
-  setText('contador-carrito', n);
-  setText('taper-cantidad', tapers);
-  setText('total-carrito', fmt(total()));
-  setText('res-platos', fmt(subtotal()));
-  setText('res-tapers', fmt(tapers * CONFIG.taperPrecio));
-  const tr = $('res-taper-row'); if(tr) tr.style.display = tapers ? '' : 'none';
-  setText('cart-sub', n ? `${n} ${n===1?'plato':'platos'} en tu pedido` : 'Revisa tus platos antes de enviar');
-  const bar = $('cart-bar'); if(bar) bar.classList.toggle('show', n > 0);
-  const lista = $('lista-carrito');
-  if(lista){
-    lista.innerHTML = !carrito.length
-      ? `<div class="cart-empty"><span class="big">🍽️</span><p class="font-bold text-white">Tu pedido está vacío</p><p class="text-sm mt-1">Agrega algo rico de la carta o del menú del día.</p><a href="#carta" onclick="toggleCarrito()" class="btn-fire !py-2.5 !px-5 text-sm mt-4">Ver la carta</a></div>`
-      : carrito.map((it,idx) => `<div class="cart-item">
-          <div class="min-w-0"><p class="font-bold text-white leading-tight">${q(it.nombre)}</p><p class="text-xs text-stone-400 mt-1">${fmt(it.precio)} c/u</p></div>
-          <div class="flex flex-col items-end gap-2 shrink-0">
-            <span class="font-extrabold text-amber-400 text-sm">${fmt(it.precio*it.cantidad)}</span>
-            <div class="qty"><button onclick="cambiarCantidad(${idx},-1)">−</button><span>${it.cantidad}</span><button onclick="cambiarCantidad(${idx},1)">+</button></div>
-          </div></div>`).join('');
+function guardarCarrito(){
+  try{ localStorage.setItem('cart', JSON.stringify({carrito,tapers,modalidad})); }catch(e){}
+}
+
+function cargarCarrito(){
+  try{
+    const g = JSON.parse(localStorage.getItem('cart')||'null');
+    if(g){ carrito = g.carrito||[]; tapers = g.tapers||0; modalidad = g.modalidad || 'Delivery'; }
+  }catch(e){}
+}
+
+function agregarAlCarrito(nombre, precio){
+  const ex = carrito.find(i=>i.nombre===nombre);
+  if(ex) ex.cantidad++;
+  else carrito.push({nombre,precio,cantidad:1});
+  
+  // Si es un menú, agregar 1 taper automáticamente
+  if(nombre.toLowerCase().startsWith('menú:') || nombre.toLowerCase().startsWith('menu:')){
+    tapers++;
   }
-  guardarCarrito();
+  
+  actualizarVistaCarrito();
+  const b = $('contador-carrito');
+  if(b){ b.classList.add('scale-125'); setTimeout(()=>b.classList.remove('scale-125'),200); }
 }
-function toggleCarrito(forceClose){
-  const m = $('modal-carrito'); if(!m) return;
-  const open = forceClose === true ? false : !m.classList.contains('open');
-  m.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
+
+function cambiarCantidad(i,d){
+  const itemAnterior = carrito[i];
+  carrito[i].cantidad += d;
+  
+  // Si era un menú y se reduce, restar taper
+  if(itemAnterior.nombre.toLowerCase().startsWith('menú:') || itemAnterior.nombre.toLowerCase().startsWith('menu:')){
+    if(d < 0 && carrito[i].cantidad <= 0){
+      tapers = Math.max(0, tapers - 1);
+    }
+  }
+  
+  if(carrito[i].cantidad <= 0) carrito.splice(i,1);
+  actualizarVistaCarrito();
 }
+
+function eliminarDelCarrito(i){
+  const item = carrito[i];
+  // Si es menú, restar taper
+  if(item.nombre.toLowerCase().startsWith('menú:') || item.nombre.toLowerCase().startsWith('menu:')){
+    tapers = Math.max(0, tapers - item.cantidad);
+  }
+  carrito.splice(i,1);
+  actualizarVistaCarrito();
+}
+
+function cambiarTaper(d){
+  tapers = Math.max(0, tapers+d);
+  actualizarVistaCarrito();
+}
+
+function vaciarCarrito(){
+  if(!carrito.length && !tapers) return;
+  if(confirm('¿Vaciar todo tu pedido?')){
+    carrito=[]; tapers=0;
+    actualizarVistaCarrito();
+  }
+}
+
+function subtotal(){ return carrito.reduce((a,i)=>a+i.precio*i.cantidad,0); }
+function total(){ return subtotal() + tapers*CONFIG.taperPrecio; }
+
 function setModalidad(mod){
   modalidad = mod;
-  document.querySelectorAll('#mods .mod').forEach(b => b.classList.toggle('on', b.dataset.mod === mod));
-  const d = $('cliente-direccion'); if(d){ d.style.display = mod === 'Delivery' ? '' : 'none'; d.classList.remove('err'); }
+  document.querySelectorAll('#mods .mod').forEach(b=> b.classList.toggle('on', b.dataset.mod===mod));
+
+  const taperRow = $('taper-row');
+  const campoDir = $('cliente-direccion');
+  const campoPers = $('cliente-personas');
+
+  if(mod === 'Salon'){
+    tapers = 0;
+    if(taperRow) taperRow.classList.add('oculto');
+    if(campoDir) campoDir.style.display = 'none';
+    if(campoPers) campoPers.style.display = '';
+  } else {
+    if(taperRow){
+      taperRow.classList.remove('oculto');
+      taperRow.classList.add('auto');
+    }
+    if(campoDir) campoDir.style.display = mod === 'Delivery' ? '' : 'none';
+    if(campoPers) campoPers.style.display = 'none';
+  }
+
+  document.querySelectorAll('.field').forEach(f=>f.classList.remove('err'));
+  actualizarVistaCarrito();
+  validarCampos();
 }
+
+function validarCampos(){
+  const nombre = ($('cliente-nombre')?.value.trim()) || '';
+  const telefono = ($('cliente-telefono')?.value.trim()) || '';
+  const direccion = ($('cliente-direccion')?.value.trim()) || '';
+  const personas = ($('cliente-personas')?.value.trim()) || '';
+
+  let valido = carrito.length > 0;
+  if(!nombre) valido = false;
+  if(!telefono) valido = false;
+  if(modalidad === 'Delivery' && !direccion) valido = false;
+  if(modalidad === 'Salon' && (!personas || parseInt(personas) < 1)) valido = false;
+
+  const btn = $('btn-enviar');
+  if(btn){
+    btn.disabled = !valido;
+    btn.textContent = valido ? 'Enviar pedido por WhatsApp' : 'Completa los datos para enviar';
+  }
+}
+
+function actualizarVistaCarrito(){
+  const n = carrito.reduce((a,i)=>a+i.cantidad,0);
+  const totalVal = total();
+  
+  setText('contador-carrito', n);
+  setText('taper-cantidad', tapers);
+  setText('total-carrito', fmt(totalVal));
+  setText('res-platos', fmt(subtotal()));
+  setText('res-tapers', fmt(tapers*CONFIG.taperPrecio));
+  setText('cb-count', n);
+  setText('cb-total', fmt(totalVal));
+  
+  const bar = $('cart-bar');
+  if(bar) bar.classList.toggle('show', n > 0);
+  
+  const tr = $('res-taper-row');
+  if(tr) tr.style.display = tapers ? '' : 'none';
+  
+  setText('cart-sub', n ? `${n} ${n===1?'plato':'platos'} en tu pedido` : 'Revisa tus platos antes de enviar');
+
+  const lista = $('lista-carrito');
+  if(lista){
+    if(!carrito.length){
+      lista.innerHTML = `<div class="cart-empty">
+        <span class="big">🍽️</span>
+        <p class="font-bold text-white">Tu pedido está vacío</p>
+        <p class="text-sm">Agrega algo rico de la carta o del menú del día.</p>
+        <a href="#carta" onclick="toggleCarrito()">Ver la carta</a>
+      </div>`;
+    } else {
+      lista.innerHTML = carrito.map((it,idx)=>`
+        <div class="cart-item">
+          <div class="cart-item-info">
+            <p class="nombre">${q(it.nombre)}</p>
+            <p class="precio-unit">${fmt(it.precio)} c/u</p>
+          </div>
+          <span class="cart-item-total">${fmt(it.precio*it.cantidad)}</span>
+          <div class="cart-item-qty">
+            <button onclick="cambiarCantidad(${idx},-1)">−</button>
+            <span>${it.cantidad}</span>
+            <button class="sumar" onclick="cambiarCantidad(${idx},1)">+</button>
+          </div>
+          <button class="cart-delete" onclick="eliminarDelCarrito(${idx})" aria-label="Eliminar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+              <path d="M10 11v6"></path><path d="M14 11v6"></path>
+              <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+            </svg>
+          </button>
+        </div>`).join('');
+    }
+  }
+  
+  guardarCarrito();
+  validarCampos();
+}
+
+function toggleCarrito(forceClose){
+  const m = $('modal-carrito');
+  if(!m) return;
+  const open = forceClose===true ? false : !m.classList.contains('open');
+  m.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+  if(open){
+    setModalidad(modalidad);
+    // Agregar listeners a los campos para validar en tiempo real
+    ['cliente-nombre','cliente-telefono','cliente-direccion','cliente-personas'].forEach(id=>{
+      const el = $(id);
+      if(el){
+        el.oninput = validarCampos;
+        el.onchange = validarCampos;
+      }
+    });
+  }
+}
+
 function initCarrito(){
-  const mods = $('mods'); if(mods) mods.addEventListener('click', e => { const b = e.target.closest('.mod'); if(b) setModalidad(b.dataset.mod); });
-  document.addEventListener('keydown', e => { if(e.key === 'Escape') toggleCarrito(true); });
+  const mods = $('mods');
+  if(mods) mods.addEventListener('click', e=>{
+    const b = e.target.closest('.mod');
+    if(b) setModalidad(b.dataset.mod);
+  });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') toggleCarrito(true); });
   setModalidad('Delivery');
   actualizarVistaCarrito();
 }
+
 function enviarPedidoWhatsApp(){
   if(!carrito.length){ alert('Agrega al menos un plato.'); return; }
-  const nombre = ($('cliente-nombre')?.value.trim()) || 'Cliente';
-  const dirEl = $('cliente-direccion'); const dir = (dirEl?.value.trim()) || '';
-  if(modalidad === 'Delivery' && !dir){ dirEl.classList.add('err'); dirEl.focus(); return; }
+
+  const nombre = ($('cliente-nombre')?.value.trim()) || '';
+  const telefono = ($('cliente-telefono')?.value.trim()) || '';
+  const direccion = ($('cliente-direccion')?.value.trim()) || '';
+  const personas = ($('cliente-personas')?.value.trim()) || '';
+
+  let error = null;
+  if(!nombre) error = 'Escribe tu nombre completo';
+  else if(!telefono) error = 'Escribe tu teléfono';
+  else if(modalidad === 'Delivery' && !direccion) error = 'Escribe tu dirección o referencia';
+  else if(modalidad === 'Salon' && (!personas || parseInt(personas) < 1)) error = 'Indica cuántas personas van a comer';
+
+  if(error){
+    alert(error);
+    if(error.includes('nombre')) $('cliente-nombre')?.classList.add('err');
+    if(error.includes('teléfono')) $('cliente-telefono')?.classList.add('err');
+    if(error.includes('dirección')) $('cliente-direccion')?.classList.add('err');
+    if(error.includes('personas')) $('cliente-personas')?.classList.add('err');
+    return;
+  }
+
+  document.querySelectorAll('.field').forEach(f=>f.classList.remove('err'));
+
   let t = `Hola *${CONFIG.nombre}*, quiero este pedido:\n\n`;
   carrito.forEach(i => t += `• ${i.cantidad}x ${i.nombre} — ${fmt(i.precio*i.cantidad)}\n`);
   if(tapers > 0) t += `• ${tapers}x Taper (envase para llevar) — ${fmt(tapers*CONFIG.taperPrecio)}\n`;
-  t += `\n*Total:* ${fmt(total())}\n*Cliente:* ${nombre}\n*Modalidad:* ${modalidad}\n`;
-  if(modalidad === 'Delivery' && dir) t += `*Dirección/Ref:* ${dir}\n`;
+  t += `\n*Total:* ${fmt(total())}\n`;
+  t += `*Cliente:* ${nombre}\n`;
+  t += `*Teléfono:* ${telefono}\n`;
+  
+  if(modalidad === 'Delivery'){
+    t += `*Modalidad:* Delivery\n*Dirección/Ref:* ${direccion}\n`;
+  } else if(modalidad === 'Recojo'){
+    t += `*Modalidad:* Recojo en local\n`;
+  } else if(modalidad === 'Salon'){
+    t += `*Modalidad:* Comer en salón\n*Personas:* ${personas}\n`;
+  }
+
+  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`, '_blank');
+}
+
+function toggleCarrito(forceClose){
+  const m = $('modal-carrito'); if(!m) return;
+  const open = forceClose===true ? false : !m.classList.contains('open');
+  m.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+  if(open){ setModalidad(modalidad); } // re-aplica estado al abrir
+}
+
+function initCarrito(){
+  const mods = $('mods'); if(mods) mods.addEventListener('click', e=>{ const b=e.target.closest('.mod'); if(b) setModalidad(b.dataset.mod); });
+  document.addEventListener('keydown', e=>{ if(e.key==='Escape') toggleCarrito(true); });
+  setModalidad('Delivery');
+  actualizarVistaCarrito();
+}
+
+function enviarPedidoWhatsApp(){
+  if(!carrito.length){ alert('Agrega al menos un plato.'); return; }
+
+  const nombre = ($('cliente-nombre')?.value.trim()) || '';
+  const telefono = ($('cliente-telefono')?.value.trim()) || '';
+  const direccion = ($('cliente-direccion')?.value.trim()) || '';
+  const personas = ($('cliente-personas')?.value.trim()) || '';
+
+  // Validaciones por modalidad
+  let error = null;
+  if(!nombre) error = 'Escribe tu nombre completo';
+  if(modalidad === 'Delivery'){
+    if(!telefono) error = 'Escribe tu teléfono';
+    if(!direccion) error = 'Escribe tu dirección o referencia';
+  }
+  if(modalidad === 'Salon'){
+    if(!personas || parseInt(personas) < 1) error = 'Indica cuántas personas van a comer';
+  }
+
+  if(error){
+    alert(error);
+    // marcar campo con error
+    if(error.includes('nombre')) $('cliente-nombre')?.classList.add('err');
+    if(error.includes('teléfono')) $('cliente-telefono')?.classList.add('err');
+    if(error.includes('dirección')) $('cliente-direccion')?.classList.add('err');
+    if(error.includes('personas')) $('cliente-personas')?.classList.add('err');
+    return;
+  }
+
+  // Limpiar errores
+  document.querySelectorAll('.field').forEach(f=>f.classList.remove('err'));
+
+  let t = `Hola *${CONFIG.nombre}*, quiero este pedido:\n\n`;
+  carrito.forEach(i => t += `• ${i.cantidad}x ${i.nombre} — ${fmt(i.precio*i.cantidad)}\n`);
+  if(tapers > 0) t += `• ${tapers}x Taper (envase para llevar) — ${fmt(tapers*CONFIG.taperPrecio)}\n`;
+  t += `\n*Total:* ${fmt(total())}\n`;
+  t += `*Cliente:* ${nombre}\n`;
+  if(modalidad === 'Delivery') t += `*Teléfono:* ${telefono}\n*Modalidad:* Delivery\n*Dirección/Ref:* ${direccion}\n`;
+  if(modalidad === 'Recojo') t += `*Modalidad:* Recojo en local\n`;
+  if(modalidad === 'Salon') t += `*Modalidad:* Comer en salón\n*Personas:* ${personas}\n`;
+
   window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`, '_blank');
 }
 

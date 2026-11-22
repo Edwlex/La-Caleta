@@ -1,9 +1,9 @@
 // ===== CARTA FIJA (no cambia, se queda en el código) =====
 const CARTA_LOCAL = {
   polleria: [
-    { nombre: "1/4 de Pollo a la Brasa", desc: "Con papas fritas y ensalada", precio: 15.00, img: "assets/img/pollo-cuarto.jpg" },
+    { nombre: "1/4 de Pollo a la Brasa", desc: "Con papas fritas y ensalada", precio: 15.00, img: "assets/img/cuarto de pollo.webp" },
     { nombre: "1/2 Pollo a la Brasa",    desc: "Con papas fritas y ensalada", precio: 25.00, img: "assets/img/medio pollo.webp" },
-    { nombre: "Octavo de Pollo",         desc: "Porción individual",          precio: 9.99,  img: "assets/img/pollo-octavo.jpg" },
+    { nombre: "Octavo de Pollo",         desc: "Porción individual",          precio: 9.99,  img: "assets/img/octavo de pollo.webp" },
     { nombre: "Pollo Entero",            desc: "Con papas fritas y ensalada", precio: 45.00, img: "assets/img/pollo entero.webp" }
   ],
   alitas: {
@@ -23,20 +23,21 @@ const CARTA_LOCAL = {
   // Modelo: { nombre: "Nombre del plato", desc: "Descripción corta", precio: 0.00, img: "assets/img/archivo.jpg" },
   carta: {
     ceviches: [
-      { nombre: "Simple" , precio: 30.00, img: "assets/img/ceviche.jpg" },
-      { nombre: "Mixto" , precio: 35.00, img: "assets/img/ceviche.jpg" },
-      { nombre: "Fuente Simple" , precio: 60.00, img: "assets/img/ceviche.jpg" },
-      { nombre: "Fuente Mixta" , precio: 70.00, img: "assets/img/ceviche.jpg" },
-      { nombre: "Leche de Tigre" , precio: 15.00, img: "assets/img/ceviche.jpg" }
+      { nombre: "Simple" , precio: 30.00, img: "assets/img/simple.webp" },
+      { nombre: "Mixto" , precio: 35.00, img: "assets/img/ceviche-mixto.webp" },
+      { nombre: "Combinado", precio: 12.00, img: "assets/img/combinado.webp" },
+      { nombre: "Fuente Simple" , precio: 60.00, img: "assets/img/fuente-simple.webp" },
+      { nombre: "Fuente Mixta" , precio: 70.00, img: "assets/img/fuente-mixta.webp" },
+      { nombre: "Leche de Tigre" , precio: 15.00, img: "leche-de-tigre.webp" }
     
     ],
     arroces: [
-      { nombre: "Arroz c/Mariscos", precio: 32.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Chaufa de Mariscos", precio: 32.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Arroz y Langostinos", precio: 35.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Arroz c/Mariscos", precio: 32.00, img: "assets/img/arroz-mariscos.webp" },
+      { nombre: "Chaufa de Mariscos", precio: 32.00, img: "assets/img/chaufa-mariscos.webp" },
+      { nombre: "Arroz y Langostinos", precio: 35.00, img: "assets/img/arroz-langostinos.webp" },
     ],
     fritos: [
-      { nombre: "Cabrilla Frita", precio: 30.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Cabrilla Frita", precio: 30.00, img: "assets/img/cabrilla-frita.webp" },
       { nombre: "Chita Frita", precio: 30.00, img: "assets/img/archivo.jpg" },
       { nombre: "Zuco", precio: 30.00, img: "assets/img/archivo.jpg" },
     ],
@@ -50,13 +51,13 @@ const CARTA_LOCAL = {
     chicharrones: [
       { nombre: "Simple", precio: 30.00, img: "assets/img/archivo.jpg" },
       { nombre: "Mixto", precio: 35.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Duo Marino", precio: 45.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Trio Marino", precio: 55.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Duo Marino", precio: 45.00, img: "assets/img/duo-marino.webp" },
+      { nombre: "Trio Marino", precio: 55.00, img: "assets/img/trio-marino.webp" },
       { nombre: "Jalea", precio: 60.00, img: "assets/img/archivo.jpg" },
     ],
     criollos: [
       { nombre: "Pato", precio: 25.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Cabrito", precio: 25.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Cabrito", precio: 25.00, img: "assets/img/cabrito.webp" },
       { nombre: "Lomo Saltado", precio: 20.00, img: "assets/img/archivo.jpg" },
       { nombre: "Filete de pollo", precio: 15.00, img: "assets/img/archivo.jpg" },
       { nombre: "Milanesa", precio: 15.00, img: "assets/img/archivo.jpg" },
@@ -66,7 +67,7 @@ const CARTA_LOCAL = {
   },
   // ===== BEBIDAS: agrega las que falten dentro de cada [ ] =====
   bebidas: {
-    bebidas: [
+    gaseosas: [
       { nombre: "Agua", precio: 3.00,  img: "assets/img/gaseosa.jpg" },
       { nombre: "Inca cola de 1/2",  precio: 4.00,  img: "assets/img/gaseosa.jpg" },
       { nombre: "Coca cola de 1/2",  precio: 4.00,  img: "assets/img/gaseosa.jpg" },

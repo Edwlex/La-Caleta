@@ -95,7 +95,16 @@
 
           <div id="md-entradas"></div>
           <div id="md-segundos"></div>
-          <div id="md-resumen"></div>
+          <!-- BARRA DE RESUMEN EN VIVO (Menú del Día) -->
+          <div id="menu-bar" class="menu-bar" aria-hidden="true">
+            <span class="mb-badge" id="mb-count">0</span>
+            <div class="mb-text">
+              <b id="mb-nombre">Tu menú</b>
+              <small id="mb-detalle">Entrada + Segundo</small>
+            </div>
+            <span class="mb-total" id="mb-total">S/ 0.00</span>
+            <button class="mb-add" onclick="agregarMenuCompleto()">Agregar</button>
+          </div>
           <p id="md-vacio" class="hidden text-stone-400 italic">Hoy no hay menú del día disponible. ¡Mira nuestra <a href="#carta" class="text-amber-400 underline">carta</a>! 🔥</p>
         </div>
       </section>
@@ -203,49 +212,72 @@
   <!-- CARRITO (panel lateral) -->
   <div id="modal-carrito" class="drawer" aria-hidden="true">
     <div class="drawer-bg" onclick="toggleCarrito()"></div>
-    <aside class="drawer-panel" role="dialog" aria-label="Tu pedido">
-      <div class="flex items-center justify-between px-5 py-4 border-b border-[#16384a]">
-        <div>
-          <h3 class="font-display font-black text-2xl text-amber-400 leading-none">Tu Pedido</h3>
-          <p class="text-xs text-stone-400 mt-1" id="cart-sub">Revisa tus platos antes de enviar</p>
-        </div>
-        <button onclick="toggleCarrito()" aria-label="Cerrar" class="w-9 h-9 rounded-full bg-stone-800 hover:bg-stone-700 text-xl leading-none">&times;</button>
-      </div>
-
-      <div class="flex-1 overflow-y-auto px-5 py-4 space-y-4">
-        <div id="lista-carrito" class="space-y-3"></div>
-
-        <!-- Taper -->
-        <div class="flex items-center justify-between bg-[#06121a] border border-dashed border-stone-700 rounded-2xl p-3">
-          <div class="flex items-center gap-3">
-            <span class="text-2xl">🥡</span>
-            <div class="leading-tight"><p class="font-bold text-sm text-white">Tapers para llevar</p><p class="text-xs text-stone-400"><span id="taper-precio-txt"></span> c/u</p></div>
+      <aside class="drawer-panel" role="dialog" aria-label="Tu pedido">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-[#16384a]">
+          <div>
+            <h3 class="font-display font-black text-2xl text-amber-400 leading-none">Tu Pedido</h3>
+            <p class="text-xs text-stone-400 mt-1" id="cart-sub">Revisa tus platos antes de enviar</p>
           </div>
-          <div class="qty"><button onclick="cambiarTaper(-1)">−</button><span id="taper-cantidad">0</span><button onclick="cambiarTaper(1)">+</button></div>
+          <button onclick="toggleCarrito()" aria-label="Cerrar" class="w-9 h-9 rounded-full bg-stone-800 hover:bg-stone-700 text-xl leading-none">&times;</button>
         </div>
 
-        <!-- Datos -->
-        <div class="space-y-3">
-          <p class="text-xs font-bold uppercase tracking-wider text-stone-400">¿Cómo lo quieres?</p>
-          <div class="grid grid-cols-3 gap-2" id="mods">
-            <button type="button" data-mod="Delivery" class="mod on">🛵<span>Delivery</span></button>
-            <button type="button" data-mod="Recojo en local" class="mod">🛍️<span>Recojo</span></button>
-            <button type="button" data-mod="Comer en salón" class="mod">🍽️<span>En salón</span></button>
+        <div class="flex-1 overflow-y-auto px-5 py-4">
+          <div id="lista-carrito" class="space-y-2"></div>
+
+          <!-- Taper automático -->
+          <div id="taper-row" class="taper-row">
+            <div class="taper-info">
+              <span>🥡</span>
+              <div>
+                <p class="titulo">Tapers para llevar</p>
+                <p class="subtitulo"><span id="taper-precio-txt"></span> c/u</p>
+              </div>
+            </div>
+            <div class="taper-qty">
+              <button onclick="cambiarTaper(-1)">−</button>
+              <span id="taper-cantidad">0</span>
+              <button onclick="cambiarTaper(1)">+</button>
+            </div>
           </div>
-          <input id="cliente-nombre" type="text" placeholder="Tu nombre" class="field" />
-          <input id="cliente-direccion" type="text" placeholder="Dirección o referencia" class="field" />
-        </div>
-      </div>
 
-      <div class="px-5 pt-4 pb-5 border-t border-[#16384a] bg-[#08171f] space-y-3">
-        <div class="space-y-1 text-sm text-stone-300">
-          <div class="flex justify-between"><span>Platos</span><span id="res-platos">S/ 0.00</span></div>
-          <div class="flex justify-between" id="res-taper-row"><span>Tapers</span><span id="res-tapers">S/ 0.00</span></div>
-          <div class="flex justify-between items-center text-lg font-extrabold text-white pt-2 border-t border-stone-800"><span>Total</span><span id="total-carrito" class="text-amber-400">S/ 0.00</span></div>
+          <!-- Modalidad -->
+          <div class="mt-4">
+            <p class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">¿Cómo lo quieres?</p>
+            <div class="grid grid-cols-3 gap-2" id="mods">
+              <button type="button" data-mod="Delivery" class="mod on">
+                <span class="icono">🛵</span>
+                <span>Delivery</span>
+              </button>
+              <button type="button" data-mod="Recojo" class="mod">
+                <span class="icono">🛍️</span>
+                <span>Recojo</span>
+              </button>
+              <button type="button" data-mod="Salon" class="mod">
+                <span class="icono">🍽️</span>
+                <span>En salón</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Campos -->
+          <div class="mt-4 space-y-2">
+            <input id="cliente-nombre" type="text" placeholder="Nombre completo" class="field required" />
+            <input id="cliente-telefono" type="tel" placeholder="Teléfono" class="field required" />
+            <input id="cliente-direccion" type="text" placeholder="Dirección o referencia" class="field required" />
+            <input id="cliente-personas" type="number" min="1" placeholder="¿Cuántas personas?" class="field required" style="display:none" />
+          </div>
         </div>
-        <button onclick="enviarPedidoWhatsApp()" class="w-full bg-gradient-to-r from-emerald-500 to-emerald-600 hover:brightness-110 text-white font-extrabold py-3.5 rounded-xl shadow-lg shadow-emerald-900/40 transition">Enviar pedido por WhatsApp</button>
-        <button onclick="vaciarCarrito()" class="w-full text-xs text-stone-500 hover:text-red-400 transition">Vaciar pedido</button>
-      </div>
+
+        <!-- Totales y botones -->
+        <div class="cart-totales">
+          <div class="fila"><span>Platos</span><span id="res-platos">S/ 0.00</span></div>
+          <div class="fila" id="res-taper-row"><span>Tapers</span><span id="res-tapers">S/ 0.00</span></div>
+          <div class="fila total"><span>Total</span><span id="total-carrito">S/ 0.00</span></div>
+          <button id="btn-enviar" onclick="enviarPedidoWhatsApp()" class="btn-enviar" disabled>
+            Completa los datos para enviar
+          </button>
+          <button onclick="vaciarCarrito()" class="btn-vaciar">Vaciar pedido</button>
+        </div>
     </aside>
   </div>
 
