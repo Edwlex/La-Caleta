@@ -223,22 +223,27 @@ function agregarMenuCompleto(){
 }
 
 // ===== CARTA: tabs Cena · A la carta · Bebidas =====
-function card(o,cat,tag,sumarTaper=true){
-  return `<div class="item-carta reveal"><article class="card-x tilt h-full flex flex-col">
-    <div class="relative">${img(o,cat)}<span class="absolute top-3 right-3 bg-amber-400 text-stone-900 font-extrabold text-sm px-3 py-1 rounded-full shadow-lg">${fmt(o.precio)}</span></div>
-    <div class="p-4 sm:p-5 flex-1 flex flex-col gap-1"><span class="text-[11px] font-bold uppercase tracking-[0.16em] text-amber-400">${q(tag)}</span>
+function card(o, cat, tag, sumarTaper = true, esBebida = false) {
+  const bebidaClass = esBebida ? ' card-bebida' : '';
+  return `<div class="item-carta reveal${bebidaClass}"><article class="card-x tilt h-full flex flex-col">
+    <div class="relative">${img(o, cat)}<span class="absolute top-3 right-3 bg-amber-400 text-stone-900 font-extrabold text-sm px-3 py-1 rounded-full shadow-lg">${fmt(o.precio)}</span></div>
+    <div class="p-4 sm:p-5 flex-1 flex flex-col gap-1"><span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">${q(tag)}</span>
       <h4 class="font-display text-xl font-bold text-white">${q(o.nombre)}</h4>
-      <p class="text-sm font-light text-stone-400 flex-1">${q(o.desc||'')}</p></div>
+      <p class="text-sm text-stone-400 flex-1">${q(o.desc || '')}</p></div>
     <div class="px-4 sm:px-5 pb-4 sm:pb-5"><button data-add data-n="${q(o.nombre)}" data-p="${o.precio}" data-taper="${sumarTaper}" class="bg-orange-600 hover:bg-orange-500 w-full text-white font-bold py-3 rounded-xl active:scale-95 transition">+ Agregar al pedido</button></div>
   </article></div>`;
 }
 
-function panel(defs){
-  const chips = defs.length>1 ? `<div class="chips">${defs.map((d,i)=>`<button data-sub="sec-${d.id}" class="${i===0?'on':''}">${d.t}</button>`).join('')}</div>` : '';
-  return chips + defs.map((d,i)=>`<section id="sec-${d.id}" class="seccion-menu${i===0?' active':''}">
-    <div class="sec-head"><span class="sec-ico">${d.ico}</span><div><h3 class="font-display font-black text-2xl sm:text-3xl text-white leading-none">${d.t}</h3>${d.sub?`<p class="text-sm font-light text-stone-400 mt-1">${q(d.sub)}</p>`:''}</div></div>
-    ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o=>card(o,d.id,d.t, !o._noTaper)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí.</p>'}
-  </section>`).join('');
+function panel(defs) {
+  const chips = defs.length > 1 ? `<div class="chips">${defs.map((d, i) => `<button data-sub="sec-${d.id}" class="${i === 0 ? 'on' : ''}">${d.ico} ${d.t}</button>`).join('')}</div>` : '';
+  return chips + defs.map((d, i) => {
+    // Detectar si es sección de bebidas (refrescos, cervezas, gaseosas, jugos, etc.)
+    const esBebida = ['refrescos', 'cervezas', 'gaseosas', 'jugos', 'chichas', 'cocteles', 'bebidas'].includes(d.id);
+    return `<section id="sec-${d.id}" class="seccion-menu${i === 0 ? ' active' : ''}">
+      <div class="sec-head"><span class="sec-ico">${d.ico}</span><div><h3 class="font-display font-black text-2xl sm:text-3xl text-white leading-none">${d.t}</h3>${d.sub ? `<p class="text-sm text-stone-400 mt-1">${q(d.sub)}</p>` : ''}</div></div>
+      ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o => card(o, d.id, d.t, !o._noTaper, esBebida)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí 🍽️</p>'}
+    </section>`;
+  }).join('');
 }
 
 function renderCarta(){

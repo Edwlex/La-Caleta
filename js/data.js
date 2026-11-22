@@ -28,7 +28,7 @@ const CARTA_LOCAL = {
       { nombre: "Combinado", precio: 12.00, img: "assets/img/combinado.webp" },
       { nombre: "Fuente Simple" , precio: 60.00, img: "assets/img/fuente-simple.webp" },
       { nombre: "Fuente Mixta" , precio: 70.00, img: "assets/img/fuente-mixta.webp" },
-      { nombre: "Leche de Tigre" , precio: 15.00, img: "leche-de-tigre.webp" }
+      { nombre: "Leche de Tigre" , precio: 15.00, img: "assets/img/leche de tigre.webp" }
     
     ],
     arroces: [
@@ -49,48 +49,48 @@ const CARTA_LOCAL = {
       { nombre: "Pahuela", precio: 40.00, img: "assets/img/pahuela.webp" },
     ],
     chicharrones: [
-      { nombre: "Simple", precio: 30.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Mixto", precio: 35.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Simple", precio: 30.00, img: "assets/img/chicharron simple.webp" },
+      { nombre: "Mixto", precio: 35.00, img: "assets/img/chicharron mixto.webp" },
       { nombre: "Duo Marino", precio: 45.00, img: "assets/img/duo-marino.webp" },
       { nombre: "Trio Marino", precio: 55.00, img: "assets/img/trio-marino.webp" },
-      { nombre: "Jalea", precio: 60.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Jalea", precio: 60.00, img: "assets/img/chichaaron de jalea.webp" },
     ],
     criollos: [
-      { nombre: "Pato", precio: 25.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Pato", precio: 25.00, img: "assets/img/arroz con pato.webp" },
       { nombre: "Cabrito", precio: 25.00, img: "assets/img/cabrito.webp" },
-      { nombre: "Lomo Saltado", precio: 20.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Filete de pollo", precio: 15.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Milanesa", precio: 15.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Churrasco", precio: 18.00, img: "assets/img/archivo.jpg" },
-      { nombre: "Chuleta", precio: 18.00, img: "assets/img/archivo.jpg" },
+      { nombre: "Lomo Saltado", precio: 20.00, img: "assets/img/lomo saltado.webp" },
+      { nombre: "Filete de pollo", precio: 15.00, img: "assets/img/filete de pollo.webp" },
+      { nombre: "Milanesa", precio: 15.00, img: "assets/img/milanesa.webp" },
+      { nombre: "Churrasco", precio: 18.00, img: "assets/img/churrasco.webp" },
+      { nombre: "Chuleta", precio: 18.00, img: "assets/img/chuleta.webp" },
     ]
   },
   // ===== BEBIDAS: agrega las que falten dentro de cada [ ] =====
   bebidas: {
     gaseosas: [
-      { nombre: "Agua", precio: 3.00,  img: "assets/img/gaseosa.jpg" },
-      { nombre: "Inca cola de 1/2",  precio: 4.00,  img: "assets/img/gaseosa.jpg" },
-      { nombre: "Coca cola de 1/2",  precio: 4.00,  img: "assets/img/gaseosa.jpg" },
-      { nombre: "Coca cola de 1L", precio: 8.00, img: "assets/img/gaseosa.jpg" },
-      { nombre: "Inka cola de 1L", precio: 8.00, img: "assets/img/chicha.jpg" },
-      { nombre: "Coca cola de 2L", precio: 10.00, img: "assets/img/chicha.jpg" },
-      { nombre: "Inka cola de 2L", precio: 10.00, img: "assets/img/chicha.jpg" },
+      { nombre: "Agua", precio: 3.00,  img: "assets/img/san luis.webp" },
+      { nombre: "Inca Kola de 1/2",  precio: 4.00,  img: "assets/img/inca kola.webp" },
+      { nombre: "Coca cola de 1/2",  precio: 4.00,  img: "assets/img/coca cola.webp" },
+      { nombre: "Coca cola de 1L", precio: 8.00, img: "assets/img/coca cola 1L.webp" },
+      { nombre: "Inca Kola de 1L", precio: 8.00, img: "assets/img/inca kola 1L.webp" },
+      { nombre: "Coca cola de 2L", precio: 10.00, img: "assets/img/coca cola 2L.webp" },
+      { nombre: "Inca Kola de 2L", precio: 10.00, img: "assets/img/inca kola 2L.webp" },
     ],
     cervezas: [
-      { nombre: "Trujillo", precio: 10.00, img: "assets/img/chicha.jpg" },
-      { nombre: "Callao", precio: 10.00, img: "assets/img/chicha.jpg" },
-      { nombre: "Negra", precio: 12.00, img: "assets/img/chicha.jpg" }
+      { nombre: "Trujillo", precio: 10.00, img: "assets/img/cerveza trujillo.webp" },
+      { nombre: "Callao", precio: 10.00, img: "assets/img/pilsen.webp" },
+      { nombre: "Negra", precio: 12.00, img: "assets/img/cerveza negra.webp" }
     ],
     refrescos:[
-      { nombre: "Limonada Frozen 1L", precio: 15, img: "assets/img/limonada"}
+      { nombre: "Limonada Frozen 1L", precio: 15, img: "assets/img/frozen.webp" },
     ]
   },
   extras: [
-    { nombre: "Papas Fritas", precio: 8.00 },
-    { nombre: "Ensalada", precio: 7.00 },
-    { nombre: "Porción de Chaufa o Papas", precio: 10.00 },
-    { nombre: "Crema de Ají", precio: 2.00 },
-    { nombre: "Kétchup", precio: 1.50 }
+    { nombre: "Papas Fritas", precio: 8.00, img: "assets/img/papas fritas.webp" },
+    { nombre: "Ensalada", precio: 7.00, img: "assets/img/ensalada.webp" },
+    { nombre: "Porción de Chaufa", precio: 10.00, img: "assets/img/chaufa.webp" },
+    { nombre: "Crema de Ají", precio: 2.00, img: "assets/img/crema de aji.webp" },
+    { nombre: "Kétchup", precio: 1.50, img: "assets/img/ketchup.webp" }
   ],
   reseñas: [
     { nombre: "Cliente", estrellas: 5, texto: "El pollo bien jugoso y las porciones generosas.", fecha: "2026-11-10" }
