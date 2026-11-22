@@ -237,20 +237,21 @@ function agregarMenuCompleto(){
 }
 
 // ===== CARTA: tabs Cena · A la carta · Bebidas =====
-function card(o,cat,tag){
+function card(o,cat,tag,sumarTaper=true){
   return `<div class="item-carta reveal"><article class="card-x tilt h-full flex flex-col">
     <div class="relative">${img(o,cat)}<span class="absolute top-3 right-3 bg-amber-400 text-stone-900 font-extrabold text-sm px-3 py-1 rounded-full shadow-lg">${fmt(o.precio)}</span></div>
     <div class="p-4 sm:p-5 flex-1 flex flex-col gap-1"><span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">${q(tag)}</span>
       <h4 class="font-display text-xl font-bold text-white">${q(o.nombre)}</h4>
       <p class="text-sm text-stone-400 flex-1">${q(o.desc||'')}</p></div>
-    <div class="px-4 sm:px-5 pb-4 sm:pb-5"><button data-add data-n="${q(o.nombre)}" data-p="${o.precio}" class="bg-orange-600 hover:bg-orange-500 w-full text-white font-bold py-3 rounded-xl active:scale-95 transition">+ Agregar al pedido</button></div>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5"><button data-add data-n="${q(o.nombre)}" data-p="${o.precio}" data-taper="${sumarTaper}" class="bg-orange-600 hover:bg-orange-500 w-full text-white font-bold py-3 rounded-xl active:scale-95 transition">+ Agregar al pedido</button></div>
   </article></div>`;
 }
+
 function panel(defs){
   const chips = defs.length>1 ? `<div class="chips">${defs.map((d,i)=>`<button data-sub="sec-${d.id}" class="${i===0?'on':''}">${d.ico} ${d.t}</button>`).join('')}</div>` : '';
   return chips + defs.map((d,i)=>`<section id="sec-${d.id}" class="seccion-menu${i===0?' active':''}">
     <div class="sec-head"><span class="sec-ico">${d.ico}</span><div><h3 class="font-display font-black text-2xl sm:text-3xl text-white leading-none">${d.t}</h3>${d.sub?`<p class="text-sm text-stone-400 mt-1">${q(d.sub)}</p>`:''}</div></div>
-    ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o=>card(o,d.id,d.t)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí 🍽️</p>'}
+    ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o=>card(o,d.id,d.t, !o._noTaper)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí 🍽️</p>'}
   </section>`).join('');
 }
 
@@ -258,19 +259,19 @@ function panel(defs){
 function renderCarta(){
   const m = getMenu(), al = m.alitas||{}, C = m.carta||{};
   
-  // ===== CENA =====
+  // ===== CENA (NO suman taper) =====
   html('tab-cena', panel([
-    {id:'polleria', ico:'🍗', t:'Pollo a la brasa', items:m.polleria||[]},
-    {id:'alitas',   ico:'🔥', t:'Alitas', sub:'Sabores: '+(al.sabores||[]).join(' • '), items:(al.items||[]).map(a=>({...a,desc:al.desc||''}))},
-    {id:'promos',   ico:'👑', t:'Promos', items:m.promos||[]},
-    {id:'extras',   ico:'🍟', t:'Extras', items:(m.extras||[]).map(e=>({...e,img:e.img||''}))}
+    {id:'polleria', ico:'🍗', t:'Pollo a la brasa', items:(m.polleria||[]).map(p=>({...p, _noTaper:true}))},
+    {id:'alitas',   ico:'🔥', t:'Alitas', sub:'Sabores: '+(al.sabores||[]).join(' • '), items:(al.items||[]).map(a=>({...a,desc:al.desc||'', _noTaper:true}))},
+    {id:'promos',   ico:'👑', t:'Promos', items:(m.promos||[]).map(p=>({...p, _noTaper:true}))},
+    {id:'extras',   ico:'🍟', t:'Extras', items:(m.extras||[]).map(e=>({...e,img:e.img||'', _noTaper:true}))}
   ]));
   
-  // ===== A LA CARTA =====
+  // ===== A LA CARTA (SÍ suman taper) =====
   html('tab-carta', panel([['ceviches','🐟','Ceviches'],['arroces','🍚','Arroces'],['fritos','🍤','Fritos'],['sudados','🍲','Sudados'],['chicharrones','🥘','Chicharrones'],['criollos','🍽️','Criollos']]
     .map(([id,ico,t])=>({id,ico,t,items:C[id]||[]}))));
     
-  // ===== BEBIDAS (DINÁMICO: lee gaseosas, cervezas, refrescos, etc.) =====
+  // ===== BEBIDAS (NO suman taper) =====
   const B = Array.isArray(m.bebidas) ? {refrescos:m.bebidas} : (m.bebidas||{});
   const ICONOS_BEB = {gaseosas:'🥤', refrescos:'🍋', cervezas:'🍺', jugos:'🧃', chichas:'🍹', cocteles:'🍸'};
   
@@ -278,10 +279,10 @@ function renderCarta(){
     .map(id => ({
       id: id,
       ico: ICONOS_BEB[id] || '🥤',
-      t: id.charAt(0).toUpperCase() + id.slice(1), // Convierte "gaseosas" en "Gaseosas"
-      items: B[id] || []
+      t: id.charAt(0).toUpperCase() + id.slice(1),
+      items: (B[id] || []).map(b=>({...b, _noTaper:true}))
     }))
-    .filter(d => d.items.length); // Solo muestra las categorías que tengan platos
+    .filter(d => d.items.length);
     
   html('tab-bebidas', panel(defsBeb));
 }
@@ -390,7 +391,6 @@ function initModalPlato(){
 
 
 // ===== CARRITO =====
-// ===== CARRITO =====
 let carrito = [], tapers = 0, modalidad = 'Delivery';
 
 function guardarCarrito(){
@@ -404,13 +404,18 @@ function cargarCarrito(){
   }catch(e){}
 }
 
-function agregarAlCarrito(nombre, precio){
+
+function agregarAlCarrito(nombre, precio, sumarTaper = true){
   const ex = carrito.find(i=>i.nombre===nombre);
-  if(ex) ex.cantidad++;
-  else carrito.push({nombre,precio,cantidad:1});
+  if(ex){
+    ex.cantidad++;
+    // Si el ítem ya existía, conservamos su flag de taper
+  } else {
+    carrito.push({nombre, precio, cantidad:1, taper: sumarTaper});
+  }
   
-  // Si es un menú, agregar 1 taper automáticamente
-  if(nombre.toLowerCase().startsWith('menú:') || nombre.toLowerCase().startsWith('menu:')){
+  // Solo suma taper si el ítem lo permite Y no es salón
+  if(sumarTaper && modalidad !== 'Salon'){
     tapers++;
   }
   
@@ -419,28 +424,22 @@ function agregarAlCarrito(nombre, precio){
   if(b){ b.classList.add('scale-125'); setTimeout(()=>b.classList.remove('scale-125'),200); }
 }
 
+// 🧮 Única fuente de verdad: tapers = suma de cantidades de ítems con taper:true
+function calcularTapers(){
+  if(modalidad === 'Salon') return 0;
+  return carrito.reduce((acc, item) => acc + (item.taper ? item.cantidad : 0), 0);
+}
+
 function cambiarCantidad(i,d){
-  const itemAnterior = carrito[i];
   carrito[i].cantidad += d;
-  
-  // Si era un menú y se reduce, restar taper
-  if(itemAnterior.nombre.toLowerCase().startsWith('menú:') || itemAnterior.nombre.toLowerCase().startsWith('menu:')){
-    if(d < 0 && carrito[i].cantidad <= 0){
-      tapers = Math.max(0, tapers - 1);
-    }
-  }
-  
   if(carrito[i].cantidad <= 0) carrito.splice(i,1);
+  tapers = calcularTapers();   // ✅ recalcula según flags
   actualizarVistaCarrito();
 }
 
 function eliminarDelCarrito(i){
-  const item = carrito[i];
-  // Si es menú, restar taper
-  if(item.nombre.toLowerCase().startsWith('menú:') || item.nombre.toLowerCase().startsWith('menu:')){
-    tapers = Math.max(0, tapers - item.cantidad);
-  }
   carrito.splice(i,1);
+  tapers = calcularTapers();   // ✅ recalcula según flags
   actualizarVistaCarrito();
 }
 
@@ -474,6 +473,9 @@ function setModalidad(mod){
     if(campoDir) campoDir.style.display = 'none';
     if(campoPers) campoPers.style.display = '';
   } else {
+    // ✅ Delivery y Recojo: solo cuentan los ítems marcados con taper:true
+    tapers = calcularTapers();
+    
     if(taperRow){
       taperRow.classList.remove('oculto');
       taperRow.classList.add('auto');
@@ -486,6 +488,7 @@ function setModalidad(mod){
   actualizarVistaCarrito();
   validarCampos();
 }
+
 
 function validarCampos(){
   const nombre = ($('cliente-nombre')?.value.trim()) || '';
@@ -533,29 +536,33 @@ function actualizarVistaCarrito(){
         <span class="big">🍽️</span>
         <p class="font-bold text-white">Tu pedido está vacío</p>
         <p class="text-sm">Agrega algo rico de la carta o del menú del día.</p>
-        <a href="#carta" onclick="toggleCarrito()">Ver la carta</a>
+        <a href="#menu-dia" onclick="toggleCarrito()" class="btn-fire !py-2.5 !px-5 text-sm mt-4">Ver menú del día</a>
       </div>`;
     } else {
-      lista.innerHTML = carrito.map((it,idx)=>`
+        lista.innerHTML = carrito.map((it,idx)=>`
         <div class="cart-item">
-          <div class="cart-item-info">
-            <p class="nombre">${q(it.nombre)}</p>
-            <p class="precio-unit">${fmt(it.precio)} c/u</p>
+          <div class="cart-item-header">
+            <p class="cart-item-nombre">${q(it.nombre)}</p>
+            <span class="cart-item-precio">${fmt(it.precio*it.cantidad)}</span>
           </div>
-          <span class="cart-item-total">${fmt(it.precio*it.cantidad)}</span>
-          <div class="cart-item-qty">
-            <button onclick="cambiarCantidad(${idx},-1)">−</button>
-            <span>${it.cantidad}</span>
-            <button class="sumar" onclick="cambiarCantidad(${idx},1)">+</button>
+          <div class="cart-item-footer">
+            <div class="cart-item-meta">
+              <div class="cart-item-qty">
+                <button class="restar" onclick="cambiarCantidad(${idx},-1)" aria-label="Restar">−</button>
+                <span>${it.cantidad}</span>
+                <button class="sumar" onclick="cambiarCantidad(${idx},1)" aria-label="Sumar">+</button>
+              </div>
+              <span class="cart-item-unit">${fmt(it.precio)} c/u</span>
+            </div>
+            <button class="cart-delete" onclick="eliminarDelCarrito(${idx})" aria-label="Eliminar">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                <path d="M10 11v6"></path><path d="M14 11v6"></path>
+                <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
           </div>
-          <button class="cart-delete" onclick="eliminarDelCarrito(${idx})" aria-label="Eliminar">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="3 6 5 6 21 6"></polyline>
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
-              <path d="M10 11v6"></path><path d="M14 11v6"></path>
-              <path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path>
-            </svg>
-          </button>
         </div>`).join('');
     }
   }
@@ -572,7 +579,6 @@ function toggleCarrito(forceClose){
   document.body.style.overflow = open ? 'hidden' : '';
   if(open){
     setModalidad(modalidad);
-    // Agregar listeners a los campos para validar en tiempo real
     ['cliente-nombre','cliente-telefono','cliente-direccion','cliente-personas'].forEach(id=>{
       const el = $(id);
       if(el){
@@ -637,6 +643,7 @@ function enviarPedidoWhatsApp(){
   window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`, '_blank');
 }
 
+
 function toggleCarrito(forceClose){
   const m = $('modal-carrito'); if(!m) return;
   const open = forceClose===true ? false : !m.classList.contains('open');
@@ -652,56 +659,15 @@ function initCarrito(){
   actualizarVistaCarrito();
 }
 
-function enviarPedidoWhatsApp(){
-  if(!carrito.length){ alert('Agrega al menos un plato.'); return; }
-
-  const nombre = ($('cliente-nombre')?.value.trim()) || '';
-  const telefono = ($('cliente-telefono')?.value.trim()) || '';
-  const direccion = ($('cliente-direccion')?.value.trim()) || '';
-  const personas = ($('cliente-personas')?.value.trim()) || '';
-
-  // Validaciones por modalidad
-  let error = null;
-  if(!nombre) error = 'Escribe tu nombre completo';
-  if(modalidad === 'Delivery'){
-    if(!telefono) error = 'Escribe tu teléfono';
-    if(!direccion) error = 'Escribe tu dirección o referencia';
-  }
-  if(modalidad === 'Salon'){
-    if(!personas || parseInt(personas) < 1) error = 'Indica cuántas personas van a comer';
-  }
-
-  if(error){
-    alert(error);
-    // marcar campo con error
-    if(error.includes('nombre')) $('cliente-nombre')?.classList.add('err');
-    if(error.includes('teléfono')) $('cliente-telefono')?.classList.add('err');
-    if(error.includes('dirección')) $('cliente-direccion')?.classList.add('err');
-    if(error.includes('personas')) $('cliente-personas')?.classList.add('err');
-    return;
-  }
-
-  // Limpiar errores
-  document.querySelectorAll('.field').forEach(f=>f.classList.remove('err'));
-
-  let t = `Hola *${CONFIG.nombre}*, quiero este pedido:\n\n`;
-  carrito.forEach(i => t += `• ${i.cantidad}x ${i.nombre} — ${fmt(i.precio*i.cantidad)}\n`);
-  if(tapers > 0) t += `• ${tapers}x Taper (envase para llevar) — ${fmt(tapers*CONFIG.taperPrecio)}\n`;
-  t += `\n*Total:* ${fmt(total())}\n`;
-  t += `*Cliente:* ${nombre}\n`;
-  if(modalidad === 'Delivery') t += `*Teléfono:* ${telefono}\n*Modalidad:* Delivery\n*Dirección/Ref:* ${direccion}\n`;
-  if(modalidad === 'Recojo') t += `*Modalidad:* Recojo en local\n`;
-  if(modalidad === 'Salon') t += `*Modalidad:* Comer en salón\n*Personas:* ${personas}\n`;
-
-  window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`, '_blank');
-}
 
 // ===== EFECTOS =====
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-add]'); if(!b) return;
-  agregarAlCarrito(b.dataset.n, parseFloat(b.dataset.p));
+  const sumarTaper = b.dataset.taper !== 'false';
+  agregarAlCarrito(b.dataset.n, parseFloat(b.dataset.p), sumarTaper);
   const t = b.textContent; b.textContent = '✓ Agregado'; setTimeout(() => b.textContent = t, 900);
 });
+
 function initFX(){
   const top = $('top'); if(top) addEventListener('scroll', () => top.classList.toggle('solid', scrollY > 30), {passive: true});
   const mq = $('mq'); if(mq) mq.innerHTML += mq.innerHTML;
