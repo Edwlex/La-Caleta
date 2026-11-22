@@ -7,37 +7,43 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,700;9..144,900&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600..900;1,9..144,600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script>document.documentElement.classList.add("js")</script>
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col selection:bg-amber-500/30 selection:text-amber-200">
 
   <!-- HEADER -->
-  <header id="top" class="fixed top-0 inset-x-0 z-40 transition-all duration-300">
+  <header id="top" class="fixed top-0 inset-x-0 z-40 transition-all duration-500">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-3">
-      <a href="#inicio" class="flex items-center gap-2">
-        <img src="assets/img/logo.webp" alt="La Caleta D'Charly" onerror="this.style.display='none'" class="w-11 h-11 sm:w-14 sm:h-14 object-contain" />
-        <span class="font-display font-black text-amber-300 text-lg sm:text-xl leading-none" id="h-nombre">La Caleta D'Charly</span>
+      <a href="#inicio" class="flex items-center gap-2.5 group">
+        <img src="assets/img/logo.webp" alt="La Caleta D'Charly" onerror="this.style.display='none'" class="w-11 h-11 sm:w-12 sm:h-12 object-contain transition-transform duration-500 group-hover:scale-105" />
+        <div class="flex flex-col">
+          <span class="font-display font-black text-amber-300 text-lg sm:text-xl leading-none tracking-tight" id="h-nombre">La Caleta D'Charly</span>
+          <span class="text-[10px] uppercase tracking-[0.24em] text-stone-400 hidden sm:block mt-1">Mar &amp; Brasa · Trujillo</span>
+        </div>
       </a>
-      <nav class="hidden lg:flex items-center gap-8 text-sm font-semibold text-stone-200">
+
+      <nav class="hidden lg:flex items-center gap-8 text-sm font-medium text-stone-300">
         <a href="#inicio" data-nav="inicio" class="navlink">Inicio</a>
         <a href="#menu-dia" data-nav="menu-dia" class="navlink">Menú del Día</a>
         <a href="#carta" data-nav="carta" class="navlink">Nuestro Menú</a>
         <a href="#nosotros" data-nav="nosotros" class="navlink">Nosotros</a>
         <a href="#ubicacion" data-nav="ubicacion" class="navlink">Ubicación</a>
       </nav>
-      <button onclick="toggleCarrito()" aria-label="Abrir pedido" class="bg-[#10283a] hover:border-amber-500 border border-sky-900 text-white px-3.5 py-2.5 rounded-full flex items-center gap-2 text-sm font-bold transition">
-        🛒 <span class="hidden sm:inline">Tu Pedido</span>
-        <span id="contador-carrito" class="bg-orange-600 text-xs font-extrabold px-2 py-0.5 rounded-full transition">0</span>
+
+      <button onclick="toggleCarrito()" aria-label="Abrir pedido" class="bg-[#10283a]/90 hover:border-amber-400/75 border border-amber-400/25 text-white px-4 py-2.5 rounded-full flex items-center gap-2.5 text-sm font-semibold shadow-[0_0_24px_rgba(245,158,11,0.12)] transition-all duration-300">
+        <span class="text-[11px] uppercase tracking-[0.16em] text-amber-300/90 hidden sm:inline">Pedido</span>
+        <span id="contador-carrito" class="bg-orange-600 text-white text-xs font-extrabold px-2 py-0.5 rounded-full transition-transform duration-200">0</span>
       </button>
     </div>
-    <nav class="lg:hidden flex gap-2 overflow-x-auto scrollbar-hide px-4 pb-2 text-xs font-bold text-stone-200">
-      <a href="#inicio" data-nav="inicio" class="pill">🏠 Inicio</a>
-      <a href="#menu-dia" data-nav="menu-dia" class="pill">☀️ Menú del día</a>
-      <a href="#carta" data-nav="carta" class="pill">🍗 Carta</a>
+
+    <nav class="lg:hidden flex gap-2 overflow-x-auto scrollbar-hide px-4 pb-2.5 text-xs font-semibold text-stone-200">
+      <a href="#inicio" data-nav="inicio" class="pill">Inicio</a>
+      <a href="#menu-dia" data-nav="menu-dia" class="pill">Menú del día</a>
+      <a href="#carta" data-nav="carta" class="pill">Carta</a>
       <a href="#nosotros" data-nav="nosotros" class="pill">Nosotros</a>
-      <a href="#ubicacion" data-nav="ubicacion" class="pill">📍 Ubicación</a>
+      <a href="#ubicacion" data-nav="ubicacion" class="pill">Ubicación</a>
     </nav>
   </header>
 
@@ -47,54 +53,97 @@
     <div class="view" id="v-inicio">
       <section class="hero relative min-h-screen flex items-center overflow-hidden pt-32 pb-28">
         <div id="embers" class="absolute inset-0 pointer-events-none"></div>
-        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-6 items-center w-full">
-          <div class="order-2 lg:order-1 text-center lg:text-left space-y-5 reveal">
-            <span class="inline-flex items-center gap-2 bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs sm:text-sm font-bold px-4 py-1.5 rounded-full"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span id="hero-horario">Abierto Hoy</span></span>
-            <h1 class="font-display font-black text-4xl sm:text-6xl leading-[1.05]">Donde el <span class="grad">mar</span> se encuentra con la <span class="grad-fire">brasa</span></h1>
-            <p class="text-base sm:text-lg text-stone-300 max-w-xl mx-auto lg:mx-0">Menú del día y ceviches para el almuerzo. Pollo a la brasa y alitas para la noche. Pide por WhatsApp en un minuto.</p>
-            <div class="flex flex-wrap gap-3 justify-center lg:justify-start pt-1">
-              <a href="#menu-dia" class="btn-fire">☀️ Ver menú de hoy</a>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-12 items-center w-full">
+          <div class="order-2 lg:order-1 lg:col-span-7 text-center lg:text-left space-y-6 reveal">
+            <span class="inline-flex items-center gap-2.5 bg-[#10283a]/80 backdrop-blur-md border border-amber-400/30 text-amber-300 text-xs sm:text-sm font-medium px-4 py-1.5 rounded-full">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span id="hero-horario">Abierto Hoy</span>
+            </span>
+
+            <h1 class="font-display font-black text-4xl sm:text-6xl xl:text-[4.25rem] leading-[1.03] tracking-tight">
+              Donde el <span class="grad">mar</span> se encuentra con la <span class="grad-fire">brasa</span>
+            </h1>
+
+            <p class="text-base sm:text-lg font-light text-stone-300 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              Menú del día y ceviches para el almuerzo. Pollo a la brasa y alitas para la noche. Pide por WhatsApp en un minuto.
+            </p>
+
+            <div class="flex flex-wrap gap-3.5 justify-center lg:justify-start pt-2">
+              <a href="#menu-dia" class="btn-fire">Ver menú de hoy</a>
               <a href="#carta" class="btn-ghost">Explorar la carta</a>
             </div>
           </div>
-          <div class="order-1 lg:order-2 flex justify-center"><img src="assets/img/logo.webp" alt="La Caleta D'Charly" class="logo-float w-60 sm:w-80 lg:w-[27rem]" /></div>
+
+          <div class="order-1 lg:order-2 lg:col-span-5 flex justify-center items-center py-4">
+            <img
+              src="assets/img/logo.webp"
+              alt="La Caleta D'Charly"
+              class="logo-float w-64 sm:w-80 lg:w-[22rem] max-w-full mx-auto select-none"
+            />
+          </div>
         </div>
-        <svg class="wave" viewBox="0 0 2880 120" preserveAspectRatio="none" aria-hidden="true"><path fill="#06121a" d="M0,60 C240,110 480,10 720,60 C960,110 1200,10 1440,60 C1680,110 1920,10 2160,60 C2400,110 2640,10 2880,60 L2880,120 L0,120Z"/></svg>
+
+        <svg class="wave" viewBox="0 0 2880 120" preserveAspectRatio="none" aria-hidden="true">
+          <path fill="#06121a" d="M0,60 C240,110 480,10 720,60 C960,110 1200,10 1440,60 C1680,110 1920,10 2160,60 C2400,110 2640,10 2880,60 L2880,120 L0,120Z"/>
+        </svg>
       </section>
 
-      <div class="marquee" aria-hidden="true"><div class="marquee-track" id="mq"><span>☀️ Menú del día</span><span>🍗 Pollo a la brasa</span><span>🔥 Alitas</span><span>🐟 Ceviche</span><span>🥡 Tapers para llevar</span><span>🛵 Delivery</span></div></div>
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track" id="mq">
+          <span>Menú del día</span><span>Pollo a la brasa</span><span>Alitas</span><span>Ceviche</span><span>Tapers para llevar</span><span>Delivery</span>
+        </div>
+      </div>
 
       <!-- Accesos rápidos -->
-      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid gap-4 sm:grid-cols-3">
-        <a href="#menu-dia" class="quick reveal"><span class="q-ico">☀️</span><b>Menú del día</b><small id="q-precio">Ver menú de hoy</small><i>→</i></a>
-        <a href="#carta" class="quick reveal"><span class="q-ico">🍗</span><b>Nuestra carta</b><small>Pollería, alitas, mariscos y más</small><i>→</i></a>
-        <a href="#ubicacion" class="quick reveal"><span class="q-ico">📍</span><b>Visítanos</b><small>La Florida, Víctor Larco</small><i>→</i></a>
+      <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 grid gap-5 sm:grid-cols-3">
+        <a href="#menu-dia" class="quick reveal">
+          <span class="q-tag">01 · Mediodía</span>
+          <b>Menú del día</b>
+          <small id="q-precio">Ver menú de hoy</small>
+          <i>→</i>
+        </a>
+        <a href="#carta" class="quick reveal">
+          <span class="q-tag">02 · Carta y Noche</span>
+          <b>Nuestra carta</b>
+          <small>Pollería, alitas, mariscos y más</small>
+          <i>→</i>
+        </a>
+        <a href="#ubicacion" class="quick reveal">
+          <span class="q-tag">03 · Local</span>
+          <b>Visítanos</b>
+          <small>La Florida, Víctor Larco</small>
+          <i>→</i>
+        </a>
       </section>
     </div>
 
     <!-- ===== MENÚ DEL DÍA (VISTA INDEPENDIENTE) ===== -->
     <div class="view" id="v-menu-dia">
       <section class="page-pad pb-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-7">
           <div class="reveal">
-            <span class="text-xs font-bold uppercase tracking-widest text-orange-500">Especial de hoy</span>
-            <h2 class="font-display font-black text-3xl sm:text-5xl text-white mt-1">Menú del Día</h2>
-            <p class="text-stone-300 mt-2">Nuestra selección diaria de platos criollos, frescos y preparados al momento.</p>
+            <span class="text-xs font-bold uppercase tracking-[0.22em] text-orange-500">Especial de hoy</span>
+            <h2 class="font-display font-black text-3xl sm:text-5xl text-white mt-1.5">Menú del Día</h2>
+            <p class="text-stone-300 font-light mt-2 max-w-2xl">Nuestra selección diaria de platos criollos, frescos y preparados al momento.</p>
           </div>
 
           <div class="menu-ticket">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-5 relative z-10">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10">
               <div>
-                <span class="inline-block bg-amber-400 text-stone-900 text-xs font-extrabold px-3 py-1 rounded-full">☀️ ALMUERZOS DE DÍA</span>
+                <span class="inline-block bg-amber-400 text-stone-900 text-xs font-extrabold tracking-[0.14em] uppercase px-3.5 py-1 rounded-full">Almuerzos de día</span>
                 <h3 class="font-display font-black text-4xl sm:text-5xl text-white mt-3">Menú del Día</h3>
-                <p class="text-sm sm:text-base text-amber-100/80 mt-1" id="md-hoy">Hoy: cargando...</p>
+                <p class="text-sm sm:text-base text-amber-100/85 font-light mt-1.5" id="md-hoy">Hoy: cargando...</p>
               </div>
-              <div class="price-bubble self-start sm:self-auto"><small>Hoy desde</small><b id="md-precio">S/ --</b></div>
+              <div class="price-bubble self-start sm:self-auto">
+                <small>Hoy desde</small>
+                <b id="md-precio">S/ --</b>
+              </div>
             </div>
           </div>
 
           <div id="md-entradas"></div>
           <div id="md-segundos"></div>
+
           <!-- BARRA DE RESUMEN EN VIVO (Menú del Día) -->
           <div id="menu-bar" class="menu-bar" aria-hidden="true">
             <span class="mb-badge" id="mb-count">0</span>
@@ -105,7 +154,8 @@
             <span class="mb-total" id="mb-total">S/ 0.00</span>
             <button class="mb-add" onclick="agregarMenuCompleto()">Agregar</button>
           </div>
-          <p id="md-vacio" class="hidden text-stone-400 italic">Hoy no hay menú del día disponible. ¡Mira nuestra <a href="#carta" class="text-amber-400 underline">carta</a>! 🔥</p>
+
+          <p id="md-vacio" class="hidden text-stone-400 italic">Hoy no hay menú del día disponible. Revisa nuestra <a href="#carta" class="text-amber-400 underline">carta</a>.</p>
         </div>
       </section>
     </div>
@@ -115,14 +165,14 @@
       <section class="page-pad pb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           <div class="reveal">
-            <span class="text-xs font-bold uppercase tracking-widest text-orange-500">Nuestro menú</span>
-            <h2 class="font-display font-black text-3xl sm:text-5xl text-white mt-1">¿Qué se te antoja hoy?</h2>
+            <span class="text-xs font-bold uppercase tracking-[0.22em] text-orange-500">Nuestro menú</span>
+            <h2 class="font-display font-black text-3xl sm:text-5xl text-white mt-1.5">¿Qué se te antoja hoy?</h2>
           </div>
 
           <div id="tabs" class="tabs">
-            <button data-tab="cena" class="tab-btn">🌙 Cena</button>
-            <button data-tab="carta" class="tab-btn">🍽️ A la carta</button>
-            <button data-tab="bebidas" class="tab-btn">🥤 Bebidas</button>
+            <button data-tab="cena" class="tab-btn">Cena</button>
+            <button data-tab="carta" class="tab-btn">A la carta</button>
+            <button data-tab="bebidas" class="tab-btn">Bebidas</button>
           </div>
 
           <div id="tab-cena" class="tab-panel"></div>
@@ -135,16 +185,20 @@
     <!-- ===== NOSOTROS ===== -->
     <div class="view" id="v-nosotros">
       <section class="page-pad pb-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-10 items-center">
-          <div class="space-y-4 reveal">
-            <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Quiénes somos</span>
-            <h2 class="font-display font-black text-3xl sm:text-5xl text-white">Sabor de mar, fuego de brasa</h2>
-            <p class="text-stone-300 leading-relaxed">En La Caleta D'Charly cocinamos con sazón criolla: de día, menús del día y ceviches preparados al momento; de noche, pollo a la brasa y alitas bien doradas. Visítanos en La Florida, Víctor Larco, o pide por WhatsApp con delivery o recojo.</p>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-7 space-y-4 reveal">
+            <span class="text-xs font-bold uppercase tracking-[0.22em] text-amber-400">Quiénes somos</span>
+            <h2 class="font-display font-black text-3xl sm:text-5xl text-white leading-tight">Sabor de mar, fuego de brasa</h2>
+            <p class="text-stone-300 font-light leading-relaxed text-base sm:text-lg">
+              En La Caleta D'Charly cocinamos con sazón criolla: de día, menús del día y ceviches preparados al momento; de noche, pollo a la brasa y alitas bien doradas. Visítanos en La Florida, Víctor Larco, o pide por WhatsApp con delivery o recojo.
+            </p>
+            <p class="font-display italic text-2xl sm:text-3xl text-amber-300/80 pt-2">La Caleta D'Charly · Trujillo</p>
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 reveal">
-            <div class="feat">🐟<b>Del mar a tu mesa</b><span>Ceviches y mariscos frescos</span></div>
-            <div class="feat">🔥<b>A la brasa</b><span>Pollo y alitas al momento</span></div>
-            <div class="feat">🥡<b>Para llevar</b><span>Delivery, recojo y tapers</span></div>
+
+          <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 reveal">
+            <div class="feat"><span class="feat-num">01</span><b>Del mar a tu mesa</b><span>Ceviches y mariscos frescos</span></div>
+            <div class="feat"><span class="feat-num">02</span><b>A la brasa</b><span>Pollo y alitas al momento</span></div>
+            <div class="feat"><span class="feat-num">03</span><b>Para llevar</b><span>Delivery, recojo y tapers</span></div>
           </div>
         </div>
       </section>
@@ -155,14 +209,17 @@
       <section class="page-pad pb-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div class="lg:col-span-5 space-y-4 reveal">
-            <span class="text-xs font-bold uppercase tracking-widest text-amber-400">Visítanos</span>
+            <span class="text-xs font-bold uppercase tracking-[0.22em] text-amber-400">Visítanos</span>
             <h2 class="font-display font-black text-3xl sm:text-4xl text-white">¿Dónde estamos?</h2>
-            <p class="text-sm text-stone-300"><strong>📍 Dirección:</strong> <span id="u-direccion"></span></p>
-            <p class="text-sm text-stone-300"><strong>🕒 Horario:</strong> <span id="u-horario"></span></p>
-            <p class="text-sm text-stone-300"><strong>📞 Pedidos:</strong> <span id="u-telefono"></span></p>
-            <a id="u-maps" href="#" target="_blank" class="btn-fire !py-3 !px-6 text-sm">Abrir ruta en Google Maps</a>
+            <div class="p-5 rounded-2xl bg-[#0b1c27]/90 border border-white/10 space-y-3">
+              <p class="text-sm text-stone-300"><strong class="text-amber-300/90">Dirección:</strong> <span id="u-direccion"></span></p>
+              <p class="text-sm text-stone-300"><strong class="text-amber-300/90">Horario:</strong> <span id="u-horario"></span></p>
+              <p class="text-sm text-stone-300"><strong class="text-amber-300/90">Pedidos:</strong> <span id="u-telefono"></span></p>
+            </div>
+            <a id="u-maps" href="#" target="_blank" rel="noopener" class="btn-fire !py-3 !px-6 text-sm">Abrir ruta en Google Maps</a>
           </div>
-          <div class="lg:col-span-7 h-72 sm:h-96 rounded-2xl overflow-hidden border border-stone-800 reveal">
+
+          <div class="lg:col-span-7 h-72 sm:h-96 rounded-2xl overflow-hidden border border-white/10 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.65)] reveal">
             <iframe id="u-iframe" src="https://www.google.com/maps?q=Calle+Montevideo+La+Florida+Victor+Larco+Herrera+Trujillo&output=embed" width="100%" height="100%" style="border:0" loading="lazy"></iframe>
           </div>
         </div>
@@ -171,22 +228,22 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-[#040b10] border-t border-stone-800 text-stone-400 text-sm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 grid grid-cols-1 sm:grid-cols-3 gap-8">
+  <footer class="bg-[#040b10] border-t border-white/10 text-stone-400 text-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 sm:grid-cols-3 gap-8">
       <div>
-        <h3 class="text-lg font-extrabold text-amber-400" id="f-nombre">La Caleta D'Charly</h3>
-        <p class="text-xs mt-2">Restaurante y Pollería. Sabor marino, comida criolla y pollo a la brasa al momento.</p>
+        <h3 class="font-display text-xl font-extrabold text-amber-400" id="f-nombre">La Caleta D'Charly</h3>
+        <p class="text-xs font-light mt-2 leading-relaxed">Restaurante y Pollería. Sabor marino, comida criolla y pollo a la brasa al momento.</p>
       </div>
       <div>
-        <h4 class="font-bold text-white mb-2">Enlaces</h4>
-        <ul class="space-y-1.5 text-xs">
-          <li><a href="#menu-dia" class="hover:text-amber-400">Menú del Día</a></li>
-          <li><a href="#carta" class="hover:text-amber-400">Carta y Pollería</a></li>
-          <li><a href="#ubicacion" class="hover:text-amber-400">Ubicación</a></li>
+        <h4 class="font-bold text-white mb-2.5 text-xs uppercase tracking-[0.2em]">Enlaces</h4>
+        <ul class="space-y-2 text-xs">
+          <li><a href="#menu-dia" class="hover:text-amber-400 transition-colors">Menú del Día</a></li>
+          <li><a href="#carta" class="hover:text-amber-400 transition-colors">Carta y Pollería</a></li>
+          <li><a href="#ubicacion" class="hover:text-amber-400 transition-colors">Ubicación</a></li>
         </ul>
       </div>
       <div>
-        <h4 class="font-bold text-white mb-2">Síguenos</h4>
+        <h4 class="font-bold text-white mb-2.5 text-xs uppercase tracking-[0.2em]">Síguenos</h4>
         <div class="flex gap-3">
           <a
             id="f-facebook"
@@ -194,7 +251,7 @@
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Facebook"
-            class="w-10 h-10 rounded-full bg-stone-800 hover:bg-stone-700 text-white flex items-center justify-center transition-colors"
+            class="w-10 h-10 rounded-full bg-[#0b1c27] border border-white/10 hover:border-amber-400/50 text-white flex items-center justify-center transition-all"
           >
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M13.5 22v-8.2h2.7l.4-3.2h-3.1V8.5c0-.9.3-1.6 1.6-1.6h1.7V4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.2 1.5-4.2 4.3v2.4H7.5v3.2h2.7V22h3.3z" />
@@ -204,7 +261,7 @@
           <a
             href="#"
             aria-label="Instagram"
-            class="w-10 h-10 rounded-full bg-stone-800 hover:bg-stone-700 text-white flex items-center justify-center transition-colors"
+            class="w-10 h-10 rounded-full bg-[#0b1c27] border border-white/10 hover:border-amber-400/50 text-white flex items-center justify-center transition-all"
           >
             <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2zm-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6zm9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25zM12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z" />
@@ -213,7 +270,7 @@
         </div>
       </div>
     </div>
-    <div class="border-t border-stone-800/80 py-4 text-center text-xs text-stone-500">© 2026 La Caleta D'Charly.</div>
+    <div class="border-t border-white/10 py-4 text-center text-xs text-stone-500">© 2026 La Caleta D'Charly.</div>
   </footer>
 
   <!-- BARRA FLOTANTE DEL PEDIDO -->
@@ -224,93 +281,93 @@
   </button>
 
   <!-- WHATSAPP FLOTANTE -->
-  <a id="float-wa" href="905900946" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" class="wa-float wa-pulse">
+  <a id="float-wa" href="https://wa.me/51905900946" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp" class="wa-float wa-pulse">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
-    <span>¿Dudas? Escríbenos</span>
+    <span>WhatsApp</span>
   </a>
 
   <!-- CARRITO (panel lateral) -->
   <div id="modal-carrito" class="drawer" aria-hidden="true">
     <div class="drawer-bg" onclick="toggleCarrito()"></div>
-      <aside class="drawer-panel" role="dialog" aria-label="Tu pedido">
-        <div class="flex items-center justify-between px-5 py-4 border-b border-[#16384a]">
-          <div>
-            <h3 class="font-display font-black text-2xl text-amber-400 leading-none">Tu Pedido</h3>
-            <p class="text-xs text-stone-400 mt-1" id="cart-sub">Revisa tus platos antes de enviar</p>
-          </div>
-          <button onclick="toggleCarrito()" aria-label="Cerrar" class="w-9 h-9 rounded-full bg-stone-800 hover:bg-stone-700 text-xl leading-none">&times;</button>
+    <aside class="drawer-panel" role="dialog" aria-label="Tu pedido">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-white/10">
+        <div>
+          <h3 class="font-display font-black text-2xl text-amber-400 leading-none">Tu Pedido</h3>
+          <p class="text-xs text-stone-400 mt-1" id="cart-sub">Revisa tus platos antes de enviar</p>
         </div>
+        <button onclick="toggleCarrito()" aria-label="Cerrar" class="w-9 h-9 rounded-full bg-[#10283a] hover:bg-stone-700 text-xl leading-none">&times;</button>
+      </div>
 
-        <div class="flex-1 overflow-y-auto px-5 py-4">
-          <div id="lista-carrito" class="space-y-2"></div>
+      <div class="flex-1 overflow-y-auto px-5 py-4">
+        <div id="lista-carrito" class="space-y-2"></div>
 
-          <!-- Taper automático -->
-          <div id="taper-row" class="taper-row">
-            <div class="taper-info">
-              <span>🥡</span>
-              <div>
-                <p class="titulo">Tapers para llevar</p>
-                <p class="subtitulo"><span id="taper-precio-txt"></span> c/u</p>
-              </div>
-            </div>
-            <div class="taper-qty">
-              <button onclick="cambiarTaper(-1)">−</button>
-              <span id="taper-cantidad">0</span>
-              <button onclick="cambiarTaper(1)">+</button>
+        <!-- Taper automático -->
+        <div id="taper-row" class="taper-row">
+          <div class="taper-info">
+            <span class="taper-tag">TAPER</span>
+            <div>
+              <p class="titulo">Tapers para llevar</p>
+              <p class="subtitulo"><span id="taper-precio-txt"></span> c/u</p>
             </div>
           </div>
-
-          <!-- Modalidad -->
-          <div class="mt-4">
-            <p class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">¿Cómo lo quieres?</p>
-            <div class="grid grid-cols-3 gap-2" id="mods">
-              <button type="button" data-mod="Delivery" class="mod on">
-                <span class="icono">🛵</span>
-                <span>Delivery</span>
-              </button>
-              <button type="button" data-mod="Recojo" class="mod">
-                <span class="icono">🛍️</span>
-                <span>Recojo</span>
-              </button>
-              <button type="button" data-mod="Salon" class="mod">
-                <span class="icono">🍽️</span>
-                <span>En salón</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Campos -->
-          <div class="mt-4 space-y-2">
-            <input id="cliente-nombre" type="text" placeholder="Nombre completo" class="field required" />
-            <input id="cliente-telefono" type="tel" placeholder="Teléfono" class="field required" />
-            <input id="cliente-direccion" type="text" placeholder="Dirección o referencia" class="field required" />
-            <input id="cliente-personas" type="number" min="1" placeholder="¿Cuántas personas?" class="field required" style="display:none" />
+          <div class="taper-qty">
+            <button onclick="cambiarTaper(-1)">−</button>
+            <span id="taper-cantidad">0</span>
+            <button onclick="cambiarTaper(1)">+</button>
           </div>
         </div>
 
-        <!-- Totales y botones -->
-        <div class="cart-totales">
-          <div class="fila"><span>Platos</span><span id="res-platos">S/ 0.00</span></div>
-          <div class="fila" id="res-taper-row"><span>Tapers</span><span id="res-tapers">S/ 0.00</span></div>
-          <div class="fila total"><span>Total</span><span id="total-carrito">S/ 0.00</span></div>
-          <button id="btn-enviar" onclick="enviarPedidoWhatsApp()" class="btn-enviar" disabled>
-            Completa los datos para enviar
-          </button>
-          <button onclick="vaciarCarrito()" class="btn-vaciar">Vaciar pedido</button>
+        <!-- Modalidad -->
+        <div class="mt-4">
+          <p class="text-xs font-bold uppercase tracking-wider text-stone-400 mb-2">¿Cómo lo quieres?</p>
+          <div class="grid grid-cols-3 gap-2" id="mods">
+            <button type="button" data-mod="Delivery" class="mod on">
+              <span class="icono">01</span>
+              <span>Delivery</span>
+            </button>
+            <button type="button" data-mod="Recojo" class="mod">
+              <span class="icono">02</span>
+              <span>Recojo</span>
+            </button>
+            <button type="button" data-mod="Salon" class="mod">
+              <span class="icono">03</span>
+              <span>En salón</span>
+            </button>
+          </div>
         </div>
+
+        <!-- Campos -->
+        <div class="mt-4 space-y-2">
+          <input id="cliente-nombre" type="text" placeholder="Nombre completo" class="field required" />
+          <input id="cliente-telefono" type="tel" placeholder="Teléfono" class="field required" />
+          <input id="cliente-direccion" type="text" placeholder="Dirección o referencia" class="field required" />
+          <input id="cliente-personas" type="number" min="1" placeholder="¿Cuántas personas?" class="field required" style="display:none" />
+        </div>
+      </div>
+
+      <!-- Totales y botones -->
+      <div class="cart-totales">
+        <div class="fila"><span>Platos</span><span id="res-platos">S/ 0.00</span></div>
+        <div class="fila" id="res-taper-row"><span>Tapers</span><span id="res-tapers">S/ 0.00</span></div>
+        <div class="fila total"><span>Total</span><span id="total-carrito">S/ 0.00</span></div>
+        <button id="btn-enviar" onclick="enviarPedidoWhatsApp()" class="btn-enviar" disabled>
+          Completa los datos para enviar
+        </button>
+        <button onclick="vaciarCarrito()" class="btn-vaciar">Vaciar pedido</button>
+      </div>
     </aside>
   </div>
 
-    <!-- MODAL DETALLE DE PLATO -->
+  <!-- MODAL DETALLE DE PLATO -->
   <div id="modal-plato" class="plato-modal" aria-hidden="true">
     <div class="plato-modal-bg" onclick="cerrarModalPlato()"></div>
     <div class="plato-modal-card" role="dialog" aria-modal="true" aria-labelledby="pm-nombre">
       <button class="plato-modal-close" onclick="cerrarModalPlato()" aria-label="Cerrar">&times;</button>
       <div class="plato-modal-img" id="pm-img"></div>
       <div class="plato-modal-body">
-        <span class="plato-modal-tag" id="pm-tag">☀️ Entrada incluida</span>
+        <span class="plato-modal-tag" id="pm-tag">Entrada incluida</span>
         <h3 class="font-display font-black text-2xl sm:text-3xl text-white mt-3 leading-tight" id="pm-nombre">Nombre del plato</h3>
-        <p class="text-stone-300 mt-2 leading-relaxed text-sm sm:text-base" id="pm-desc">Descripción</p>
+        <p class="text-stone-300 font-light mt-2 leading-relaxed text-sm sm:text-base" id="pm-desc">Descripción</p>
         <div class="plato-modal-footer">
           <div>
             <small class="text-xs text-stone-400 block" id="pm-prelabel">Con tu menú</small>
