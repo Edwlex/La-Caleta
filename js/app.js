@@ -253,20 +253,39 @@ function panel(defs){
     ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o=>card(o,d.id,d.t)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí 🍽️</p>'}
   </section>`).join('');
 }
+
+
 function renderCarta(){
   const m = getMenu(), al = m.alitas||{}, C = m.carta||{};
-  // Ya no renderiza 'tab-menus', solo cena, carta y bebidas
+  
+  // ===== CENA =====
   html('tab-cena', panel([
     {id:'polleria', ico:'🍗', t:'Pollo a la brasa', items:m.polleria||[]},
     {id:'alitas',   ico:'🔥', t:'Alitas', sub:'Sabores: '+(al.sabores||[]).join(' • '), items:(al.items||[]).map(a=>({...a,desc:al.desc||''}))},
     {id:'promos',   ico:'👑', t:'Promos', items:m.promos||[]},
     {id:'extras',   ico:'🍟', t:'Extras', items:(m.extras||[]).map(e=>({...e,img:e.img||''}))}
   ]));
+  
+  // ===== A LA CARTA =====
   html('tab-carta', panel([['ceviches','🐟','Ceviches'],['arroces','🍚','Arroces'],['fritos','🍤','Fritos'],['sudados','🍲','Sudados'],['chicharrones','🥘','Chicharrones'],['criollos','🍽️','Criollos']]
     .map(([id,ico,t])=>({id,ico,t,items:C[id]||[]}))));
+    
+  // ===== BEBIDAS (DINÁMICO: lee gaseosas, cervezas, refrescos, etc.) =====
   const B = Array.isArray(m.bebidas) ? {refrescos:m.bebidas} : (m.bebidas||{});
-  html('tab-bebidas', panel([{id:'refrescos', ico:'🥤', t:'Refrescos', items:B.refrescos||[]}, {id:'cervezas', ico:'🍺', t:'Cervezas', items:B.cervezas||[]}]));
+  const ICONOS_BEB = {gaseosas:'🥤', refrescos:'🍋', cervezas:'🍺', jugos:'🧃', chichas:'🍹', cocteles:'🍸'};
+  
+  const defsBeb = Object.keys(B)
+    .map(id => ({
+      id: id,
+      ico: ICONOS_BEB[id] || '🥤',
+      t: id.charAt(0).toUpperCase() + id.slice(1), // Convierte "gaseosas" en "Gaseosas"
+      items: B[id] || []
+    }))
+    .filter(d => d.items.length); // Solo muestra las categorías que tengan platos
+    
+  html('tab-bebidas', panel(defsBeb));
 }
+
 
 // ===== TABS =====
 let curTab = 'cena'; // Cambiado de 'menus' a 'cena'
