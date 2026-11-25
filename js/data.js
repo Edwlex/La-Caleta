@@ -1,10 +1,12 @@
 // ===== CARTA FIJA (no cambia, se queda en el código) =====
 const CARTA_LOCAL = {
   polleria: [
+    { nombre: "1/8 de Pollo a la Brasa", desc: "Porción individual",          precio: 10.00,  img: "assets/img/octavo de pollo.webp" },
     { nombre: "1/4 de Pollo a la Brasa", desc: "Con papas fritas y ensalada", precio: 15.00, img: "assets/img/cuarto de pollo.webp" },
-    { nombre: "1/2 Pollo a la Brasa",    desc: "Con papas fritas y ensalada", precio: 25.00, img: "assets/img/medio pollo.webp" },
-    { nombre: "Octavo de Pollo",         desc: "Porción individual",          precio: 9.99,  img: "assets/img/octavo de pollo.webp" },
-    { nombre: "Pollo Entero",            desc: "Con papas fritas y ensalada", precio: 45.00, img: "assets/img/pollo entero.webp" }
+    { nombre: "1/2 Pollo a la Brasa",    desc: "Con papas fritas y ensalada", precio: 30.00, img: "assets/img/medio pollo.webp" },
+    { nombre: "Pollo Entero",            desc: "Con papas fritas y ensalada", precio: 50.00, img: "assets/img/pollo entero.webp" },
+    { nombre: "1/8 de Mostrito",         desc: "Con papas fritas y ensalada", precio: 12.00, img: "assets/img/mostrito 1-8.webp" },
+    { nombre: "1/4 de Mostrito",         desc: "Con papas fritas y ensalada", precio: 18.00, img: "assets/img/mostrito 1-8.webp" }
   ],
   alitas: {
     desc: "Con papas fritas y cremas",
@@ -24,7 +26,7 @@ const CARTA_LOCAL = {
   carta: {
     ceviches: [
       { nombre: "Simple" , precio: 30.00, img: "assets/img/simple.webp" },
-      { nombre: "Mixto" , precio: 35.00, img: "assets/img/ceviche-mixto.webp" },
+      { nombre: "Mixto" , precio: 35.00, img: "assets/img/ceviche mixto.webp" },
       { nombre: "Combinado", precio: 12.00, img: "assets/img/combinado.webp" },
       { nombre: "Fuente Simple" , precio: 60.00, img: "assets/img/fuente-simple.webp" },
       { nombre: "Fuente Mixta" , precio: 70.00, img: "assets/img/fuente-mixta.webp" },
@@ -35,6 +37,7 @@ const CARTA_LOCAL = {
       { nombre: "Arroz c/Mariscos", precio: 32.00, img: "assets/img/arroz-mariscos.webp" },
       { nombre: "Chaufa de Mariscos", precio: 32.00, img: "assets/img/chaufa-mariscos.webp" },
       { nombre: "Arroz y Langostinos", precio: 35.00, img: "assets/img/arroz-langostinos.webp" },
+      { nombre: "Picante de Mariscos", precio: 30.00, img: "assets/img/picante-mariscos.webp" },
     ],
     fritos: [
       { nombre: "Cabrilla Frita", precio: 30.00, img: "assets/img/cabrilla-frita.webp" },
@@ -45,8 +48,7 @@ const CARTA_LOCAL = {
       { nombre: "Cabrilla", precio: 30.00, img: "assets/img/sudado-cabrilla.webp" },
       { nombre: "Chita", precio: 30.00, img: "assets/img/sudado-chita.webp" },
       { nombre: "Chilcano", precio: 20.00, img: "assets/img/chilcano.webp" },
-      { nombre: "Picante de Mariscos", precio: 30.00, img: "assets/img/picante-mariscos.webp" },
-      { nombre: "Pahuela", precio: 40.00, img: "assets/img/pahuela.webp" },
+      { nombre: "Parihuela", precio: 40.00, img: "assets/img/pahuela.webp" },
     ],
     chicharrones: [
       { nombre: "Simple", precio: 30.00, img: "assets/img/chicharron simple.webp" },
@@ -56,7 +58,7 @@ const CARTA_LOCAL = {
       { nombre: "Jalea", precio: 60.00, img: "assets/img/chichaaron de jalea.webp" },
     ],
     criollos: [
-      { nombre: "Pato", precio: 25.00, img: "assets/img/arroz con pato.webp" },
+      { nombre: "Pato Guisado", precio: 25.00, img: "assets/img/pato guisado.webp" },
       { nombre: "Cabrito", precio: 25.00, img: "assets/img/cabrito.webp" },
       { nombre: "Lomo Saltado", precio: 20.00, img: "assets/img/lomo saltado.webp" },
       { nombre: "Filete de pollo", precio: 15.00, img: "assets/img/filete de pollo.webp" },

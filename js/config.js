@@ -11,5 +11,5 @@ const CONFIG = {
   // El taper (envase para llevar) cuesta S/1.50 cada uno
   taperPrecio: 1.50,
   // Enlace del mapa: cuando registres el local en Google Maps, pega el iframe o este link
-  mapsLink: "https://maps.google.com/?q=Calle+Montevideo+La+Florida+Victor+Larco+Herrera+Trujillo"
+  mapsLink: "https://maps.app.goo.gl/k6pRAyrgDqppM3oe9"
 };

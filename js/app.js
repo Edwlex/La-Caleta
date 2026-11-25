@@ -1,4 +1,4 @@
-// ===== Helpers =====
+// ===== HELPERS =====
 const MON = "S/";
 const DIAS = ["domingo","lunes","martes","miercoles","jueves","viernes","sabado"];
 const $ = id => document.getElementById(id);
@@ -20,9 +20,31 @@ function getMenu(){
   try { const g = localStorage.getItem('menuEdit'); return g ? JSON.parse(g) : {}; }
   catch(e){ return {}; }
 }
-const EMO={polleria:'BRASA',alitas:'ALITAS',promos:'PROMO',extras:'EXTRA',bebidas:'BEBIDA',ceviches:'MARISCO',arroces:'ARROZ',fritos:'FRITO',sudados:'SUDADO',chicharrones:'JALEA',criollos:'CRIOLLO',refrescos:'REFRESCO',cervezas:'CERVEZA'};
-const q=t=>String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-function img(o,cat){
+
+// ===== CONFIGURACIÓN DINÁMICA DE TAPERS =====
+function getConfigTaper(nombre, categoria) {
+  const n = String(nombre || "").toLowerCase();
+  
+  // Reglas para CENA y EXTRAS (Taper = S/ 1.00)
+  if (categoria === 'polleria' || categoria === 'alitas' || categoria === 'promos' || categoria === 'extras') {
+    if (n.includes('octavo') || n.includes('1/8') || n.includes('mostrito')) return { cantidad: 1, precio: 1.00 };
+    if (n.includes('1/4') || n.includes('cuarto')) return { cantidad: 1, precio: 1.00 };
+    if (n.includes('1/2') || n.includes('medio')) return { cantidad: 3, precio: 1.00 };
+    if (n.includes('entero')) return { cantidad: 3, precio: 1.00 };
+    if (n.includes('6 ') || n.includes('6 alitas')) return { cantidad: 1, precio: 1.00 };
+    if (n.includes('10 ') || n.includes('15 ')) return { cantidad: 3, precio: 1.00 };
+    if (n.includes('20 ')) return { cantidad: 4, precio: 1.00 };
+    if (n.includes('papas') || n.includes('ensalada') || n.includes('chaufa')) return { cantidad: 1, precio: 1.00 };
+  }
+  
+  // Por defecto (Menú del día, A la carta): 1 taper a S/ 1.50
+  return { cantidad: 1, precio: 1.50 };
+}
+
+const EMO = {polleria:'BRASA',alitas:'ALITAS',promos:'PROMO',extras:'EXTRA',bebidas:'BEBIDA',ceviches:'MARISCO',arroces:'ARROZ',fritos:'FRITO',sudados:'SUDADO',chicharrones:'JALEA',criollos:'CRIOLLO',refrescos:'REFRESCO',cervezas:'CERVEZA'};
+const q = t => String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+function img(o, cat){
   return `<div class="img-wrap" data-e="${EMO[cat]||'PLATO'}">
     <img src="${q(o.img||'')}" alt="${q(o.nombre)}" loading="lazy" class="${o.fit==='contain'?'fit-contain':''}" onerror="this.parentElement.classList.add('img-missing');this.remove()" />
   </div>`;
@@ -63,7 +85,7 @@ function cargarConfig(){
   setText('taper-precio-txt', fmt(CONFIG.taperPrecio));
 }
 
-// ===== MENÚ DEL DÍA (LÓGICA: SEGUNDO OBLIGATORIO, ENTRADA OPCIONAL) =====
+// ===== MENÚ DEL DÍA =====
 let seleccionMenu = { entradaIdx: -1, segundoIdx: -1 };
 
 function renderMenuDelDia(){
@@ -134,7 +156,6 @@ function renderMenuDelDia(){
   actualizarResumenMenu();
 }
 
-// ===== FUNCIONES DE CONTROL DE SELECCIÓN =====
 function seleccionarEntrada(idx) {
   seleccionMenu.entradaIdx = (seleccionMenu.entradaIdx === idx) ? -1 : idx;
   actualizarUISeleccion();
@@ -153,11 +174,8 @@ function mostrarMenuBar(mostrar){
   const mb = $('menu-bar'), cb = $('cart-bar');
   if(mb){ mb.classList.toggle('show', mostrar); mb.setAttribute('aria-hidden', mostrar ? 'false' : 'true'); }
   if(cb){
-    if(mostrar){
-      cb.classList.remove('show');
-    } else {
-      actualizarVistaCarrito();
-    }
+    if(mostrar){ cb.classList.remove('show'); } 
+    else { actualizarVistaCarrito(); }
   }
 }
 
@@ -213,35 +231,39 @@ function agregarMenuCompleto(){
     nombreCombo = `Menú: ${entradaElegida.nombre} + ${segundoElegido.nombre}`;
   }
 
-  agregarAlCarrito(nombreCombo, precioTotal);
+  // Menú del día siempre suma 1 taper a S/ 1.50
+  agregarAlCarrito(nombreCombo, precioTotal, 1, 1.50);
 
   seleccionMenu = { entradaIdx: -1, segundoIdx: -1 };
   document.querySelectorAll('.entrada-card,.segundo-card').forEach(c => c.classList.remove('selected'));
 
   mostrarMenuBar(false);
-  actualizarVistaCarrito();
+  actualizarVistaCarrito(); 
 }
 
 // ===== CARTA: tabs Cena · A la carta · Bebidas =====
-function card(o, cat, tag, sumarTaper = true, esBebida = false) {
+function card(o, cat, tag, esBebida = false) {
+  const config = esBebida ? { cantidad: 0, precio: 0 } : getConfigTaper(o.nombre, cat);
   const bebidaClass = esBebida ? ' card-bebida' : '';
+  
   return `<div class="item-carta reveal${bebidaClass}"><article class="card-x tilt h-full flex flex-col">
     <div class="relative">${img(o, cat)}<span class="absolute top-3 right-3 bg-amber-400 text-stone-900 font-extrabold text-sm px-3 py-1 rounded-full shadow-lg">${fmt(o.precio)}</span></div>
     <div class="p-4 sm:p-5 flex-1 flex flex-col gap-1"><span class="text-[11px] font-bold uppercase tracking-wider text-amber-400">${q(tag)}</span>
       <h4 class="font-display text-xl font-bold text-white">${q(o.nombre)}</h4>
       <p class="text-sm text-stone-400 flex-1">${q(o.desc || '')}</p></div>
-    <div class="px-4 sm:px-5 pb-4 sm:pb-5"><button data-add data-n="${q(o.nombre)}" data-p="${o.precio}" data-taper="${sumarTaper}" class="bg-orange-600 hover:bg-orange-500 w-full text-white font-bold py-3 rounded-xl active:scale-95 transition">+ Agregar al pedido</button></div>
+    <div class="px-4 sm:px-5 pb-4 sm:pb-5">
+      <button data-add data-n="${q(o.nombre)}" data-p="${o.precio}" data-taper-cant="${config.cantidad}" data-taper-precio="${config.precio}" class="bg-orange-600 hover:bg-orange-500 w-full text-white font-bold py-3 rounded-xl active:scale-95 transition">+ Agregar al pedido</button>
+    </div>
   </article></div>`;
 }
 
 function panel(defs) {
   const chips = defs.length > 1 ? `<div class="chips">${defs.map((d, i) => `<button data-sub="sec-${d.id}" class="${i === 0 ? 'on' : ''}">${d.ico} ${d.t}</button>`).join('')}</div>` : '';
   return chips + defs.map((d, i) => {
-    // Detectar si es sección de bebidas (refrescos, cervezas, gaseosas, jugos, etc.)
     const esBebida = ['refrescos', 'cervezas', 'gaseosas', 'jugos', 'chichas', 'cocteles', 'bebidas'].includes(d.id);
     return `<section id="sec-${d.id}" class="seccion-menu${i === 0 ? ' active' : ''}">
       <div class="sec-head"><span class="sec-ico">${d.ico}</span><div><h3 class="font-display font-black text-2xl sm:text-3xl text-white leading-none">${d.t}</h3>${d.sub ? `<p class="text-sm text-stone-400 mt-1">${q(d.sub)}</p>` : ''}</div></div>
-      ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o => card(o, d.id, d.t, !o._noTaper, esBebida)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí 🍽️</p>'}
+      ${d.items.length ? `<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">${d.items.map(o => card(o, d.id, d.t, esBebida)).join('')}</div>` : '<p class="text-stone-400 italic">Pronto agregaremos platos aquí</p>'}
     </section>`;
   }).join('');
 }
@@ -250,10 +272,10 @@ function renderCarta(){
   const m = getMenu(), al = m.alitas||{}, C = m.carta||{};
 
   html('tab-cena', panel([
-    {id:'polleria', ico:'01', t:'Pollo a la brasa', items:(m.polleria||[]).map(p=>({...p, _noTaper:true}))},
-    {id:'alitas',   ico:'02', t:'Alitas', sub:'Sabores: '+(al.sabores||[]).join(' • '), items:(al.items||[]).map(a=>({...a,desc:al.desc||'', _noTaper:true}))},
-    {id:'promos',   ico:'03', t:'Promos', items:(m.promos||[]).map(p=>({...p, _noTaper:true}))},
-    {id:'extras',   ico:'04', t:'Extras', items:(m.extras||[]).map(e=>({...e,img:e.img||'', _noTaper:true}))}
+    {id:'polleria', ico:'01', t:'Pollo a la brasa', items:(m.polleria||[])},
+    {id:'alitas',   ico:'02', t:'Alitas', sub:'Sabores: '+(al.sabores||[]).join(' • '), items:(al.items||[]).map(a=>({...a,desc:al.desc||''}))},
+    {id:'promos',   ico:'03', t:'Promos', items:(m.promos||[])},
+    {id:'extras',   ico:'04', t:'Extras', items:(m.extras||[]).map(e=>({...e,img:e.img||''}))}
   ]));
 
   html('tab-carta', panel([['ceviches','01','Ceviches'],['arroces','02','Arroces'],['fritos','03','Fritos'],['sudados','04','Sudados'],['chicharrones','05','Chicharrones'],['criollos','06','Criollos']]
@@ -267,7 +289,7 @@ function renderCarta(){
       id: id,
       ico: ICONOS_BEB[id] || 'BEB',
       t: id.charAt(0).toUpperCase() + id.slice(1),
-      items: (B[id] || []).map(b=>({...b, _noTaper:true}))
+      items: (B[id] || [])
     }))
     .filter(d => d.items.length);
 
@@ -330,7 +352,6 @@ function cerrarModalPlato(){
 function initModalPlato(){
   document.addEventListener('click', e => {
     if(e.target.closest('[data-add]')) return;
-
     const t = e.target.closest('[data-plato]');
     if(!t) return;
 
@@ -349,7 +370,8 @@ function initModalPlato(){
     addBtn.addEventListener('click', e => {
       e.stopPropagation();
       if(!platoModalData) return;
-      agregarAlCarrito(platoModalData.nombreCarrito, platoModalData.precioCarrito);
+      // El modal del menú del día usa 1 taper a 1.50 por defecto
+      agregarAlCarrito(platoModalData.nombreCarrito, platoModalData.precioCarrito, 1, 1.50);
       const t = addBtn.textContent;
       addBtn.textContent = 'Agregado al pedido';
       addBtn.classList.add('bg-emerald-600');
@@ -364,70 +386,74 @@ function initModalPlato(){
 }
 
 // ===== CARRITO =====
-let carrito = [], tapers = 0, modalidad = 'Delivery';
+let carrito = [], modalidad = 'Delivery';
 
 function guardarCarrito(){
-  try{ localStorage.setItem('cart', JSON.stringify({carrito,tapers,modalidad})); }catch(e){}
+  try{ localStorage.setItem('cart', JSON.stringify({carrito, modalidad})); }catch(e){}
 }
 
 function cargarCarrito(){
   try{
     const g = JSON.parse(localStorage.getItem('cart')||'null');
-    if(g){ carrito = g.carrito||[]; tapers = g.tapers||0; modalidad = g.modalidad || 'Delivery'; }
+    if(g){ carrito = g.carrito||[]; modalidad = g.modalidad || 'Delivery'; }
   }catch(e){}
 }
 
-function agregarAlCarrito(nombre, precio, sumarTaper = true){
+function agregarAlCarrito(nombre, precio, taperCant = 0, taperPrecio = 1.50){
   const ex = carrito.find(i=>i.nombre===nombre);
   if(ex){
     ex.cantidad++;
   } else {
-    carrito.push({nombre, precio, cantidad:1, taper: sumarTaper});
+    carrito.push({nombre, precio, cantidad:1, taperCant, taperPrecio});
   }
-
-  if(sumarTaper && modalidad !== 'Salon'){
-    tapers++;
-  }
-
   actualizarVistaCarrito();
   const b = $('contador-carrito');
   if(b){ b.classList.add('scale-125'); setTimeout(()=>b.classList.remove('scale-125'),200); }
 }
 
-function calcularTapers(){
-  if(modalidad === 'Salon') return 0;
-  return carrito.reduce((acc, item) => acc + (item.taper ? item.cantidad : 0), 0);
+function calcularTotalesTapers() {
+  if (modalidad === 'Salon') return { cantidad: 0, costo: 0 };
+  
+  let cantidadTotal = 0;
+  let costoTotal = 0;
+  
+  carrito.forEach(item => {
+    if (item.taperCant > 0) {
+      cantidadTotal += item.cantidad * item.taperCant;
+      costoTotal += item.cantidad * item.taperCant * item.taperPrecio;
+    }
+  });
+  
+  return { cantidad: cantidadTotal, costo: costoTotal };
 }
 
 function cambiarCantidad(i,d){
   carrito[i].cantidad += d;
   if(carrito[i].cantidad <= 0) carrito.splice(i,1);
-  tapers = calcularTapers();
   actualizarVistaCarrito();
 }
 
 function eliminarDelCarrito(i){
   carrito.splice(i,1);
-  tapers = calcularTapers();
   actualizarVistaCarrito();
 }
 
-function cambiarTaper(d){
-  tapers = Math.max(0, tapers+d);
-  actualizarVistaCarrito();
-}
+// Función vacía mantenida por compatibilidad con el HTML, pero el CSS ya oculta los botones en modo auto
+function cambiarTaper(d){} 
 
 function vaciarCarrito(){
-  if(!carrito.length && !tapers) return;
+  if(!carrito.length) return;
   carrito = [];
-  tapers = 0;
   actualizarVistaCarrito();
   toggleCarrito(true);
   mostrarToast('Pedido vaciado');
 }
 
 function subtotal(){ return carrito.reduce((a,i)=>a+i.precio*i.cantidad,0); }
-function total(){ return subtotal() + tapers*CONFIG.taperPrecio; }
+function total(){ 
+  const tapersInfo = calcularTotalesTapers();
+  return subtotal() + tapersInfo.costo; 
+}
 
 function setModalidad(mod){
   modalidad = mod;
@@ -438,13 +464,10 @@ function setModalidad(mod){
   const campoPers = $('cliente-personas');
 
   if(mod === 'Salon'){
-    tapers = 0;
     if(taperRow) taperRow.classList.add('oculto');
     if(campoDir) campoDir.style.display = 'none';
     if(campoPers) campoPers.style.display = '';
   } else {
-    tapers = calcularTapers();
-
     if(taperRow){
       taperRow.classList.remove('oculto');
       taperRow.classList.add('auto');
@@ -479,13 +502,15 @@ function validarCampos(){
 
 function actualizarVistaCarrito(){
   const n = carrito.reduce((a,i)=>a+i.cantidad,0);
-  const totalVal = total();
+  const sub = subtotal();
+  const tapersInfo = calcularTotalesTapers();
+  const totalVal = sub + tapersInfo.costo;
 
   setText('contador-carrito', n);
-  setText('taper-cantidad', tapers);
+  setText('taper-cantidad', tapersInfo.cantidad);
   setText('total-carrito', fmt(totalVal));
-  setText('res-platos', fmt(subtotal()));
-  setText('res-tapers', fmt(tapers*CONFIG.taperPrecio));
+  setText('res-platos', fmt(sub));
+  setText('res-tapers', fmt(tapersInfo.costo));
   setText('cb-count', n);
   setText('cb-total', fmt(totalVal));
 
@@ -493,7 +518,7 @@ function actualizarVistaCarrito(){
   if(bar) bar.classList.toggle('show', n > 0);
 
   const tr = $('res-taper-row');
-  if(tr) tr.style.display = tapers ? '' : 'none';
+  if(tr) tr.style.display = tapersInfo.cantidad > 0 ? '' : 'none';
 
   setText('cart-sub', n ? `${n} ${n===1?'plato':'platos'} en tu pedido` : 'Revisa tus platos antes de enviar');
 
@@ -597,10 +622,13 @@ function enviarPedidoWhatsApp(){
 
   document.querySelectorAll('.field').forEach(f=>f.classList.remove('err'));
 
+  const tapersInfo = calcularTotalesTapers();
+  const totalVal = subtotal() + tapersInfo.costo;
+
   let t = `Hola *${CONFIG.nombre}*, quiero este pedido:\n\n`;
   carrito.forEach(i => t += `• ${i.cantidad}x ${i.nombre} — ${fmt(i.precio*i.cantidad)}\n`);
-  if(tapers > 0) t += `• ${tapers}x Taper (envase para llevar) — ${fmt(tapers*CONFIG.taperPrecio)}\n`;
-  t += `\n*Total:* ${fmt(total())}\n`;
+  if(tapersInfo.cantidad > 0) t += `• ${tapersInfo.cantidad}x Taper (envase para llevar) — ${fmt(tapersInfo.costo)}\n`;
+  t += `\n*Total:* ${fmt(totalVal)}\n`;
   t += `*Cliente:* ${nombre}\n`;
   t += `*Teléfono:* ${telefono}\n`;
 
@@ -615,12 +643,9 @@ function enviarPedidoWhatsApp(){
   window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`, '_blank');
 
   carrito = [];
-  tapers = 0;
   guardarCarrito();
   actualizarVistaCarrito();
-
   toggleCarrito(true);
-
   mostrarToast('Pedido enviado con éxito');
 }
 
@@ -662,8 +687,12 @@ function mostrarToast(mensaje){
 // ===== EFECTOS =====
 document.addEventListener('click', e => {
   const b = e.target.closest('[data-add]'); if(!b) return;
-  const sumarTaper = b.dataset.taper !== 'false';
-  agregarAlCarrito(b.dataset.n, parseFloat(b.dataset.p), sumarTaper);
+  const nombre = b.dataset.n;
+  const precio = parseFloat(b.dataset.p);
+  const taperCant = parseInt(b.dataset.taperCant) || 0;
+  const taperPrecio = parseFloat(b.dataset.taperPrecio) || 1.50;
+  
+  agregarAlCarrito(nombre, precio, taperCant, taperPrecio);
   const t = b.textContent; b.textContent = 'Agregado'; setTimeout(() => b.textContent = t, 900);
 });
 
